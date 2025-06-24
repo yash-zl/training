@@ -1,0 +1,280 @@
+@font-face {
+  font-family: "Quicksand";
+  src: url("/Quicksand\ font\ 1/static/Quicksand-Regular.ttf")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Quicksand";
+  src: url("/Quicksand\ font\ 1/static/Quicksand-Medium.ttf") format("truetype");
+  font-weight: medium;
+  font-style: normal;
+}
+// @font-face {
+//   font-family: "Quicksand";
+//   src: url("/Quicksand\ font\ 1/static/Quicksand=Semibold.ttf")
+//     format("truetype");
+//   font-weight: bolder;
+//   font-style: normal;
+// }
+
+@mixin flexRow($jc, $ai, $gap) {
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+  gap: $gap;
+}
+
+@mixin flexColumn($jc, $ai, $gap) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $jc;
+  align-items: $ai;
+  gap: $gap;
+}
+
+$secondaryTextColor: #666666;
+$primaryBg: #eeeeee;
+$smallText: 12px;
+$themeText: #1f7a54;
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  background-color: $primaryBg;
+  font-family: "Quicksand";
+  font-weight: medium;
+  color: rgba(34, 34, 34, 1);
+  padding: 0px;
+  @include flexColumn(space-between, normal, 0px);
+  height: 98vh;
+}
+header {
+  height: 6vh;
+  background-image: url("header pattern svg.svg");
+  background-blend-mode: soft-light;
+  background-color: rgb(35 46 59);
+  padding: 5px 29px 5px 29px;
+  @include flexRow(space-between, center, 0px);
+  background-size: 176%;
+  border-bottom: rgba(49, 185, 228, 1) 3px solid;
+
+  .header_logo {
+    height: 80%;
+  }
+}
+
+.form_div {
+  margin: 50px auto;
+  border-top: rgba(58, 199, 236, 1) 4px solid;
+  height: 550px;
+  width: 424px;
+  padding: 22px 32px;
+  background-color: white;
+
+  .form_header {
+    @include flexRow(space-between, center, 0px);
+    margin-bottom: 34px;
+    color: #222222;
+    font-weight: medium;
+
+    .form_purpose {
+      grid-column: 49 / 168;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .back {
+      width: 24px;
+    }
+
+    .dis_none {
+      visibility: hidden;
+    }
+  }
+
+  .rad_btn_container {
+    font-family: 16px;
+    @include flexRow(start, normal, 32px);
+    margin-bottom: 24px;
+
+    .rad_btn_opt {
+      @include flexRow(start, center, 8px);
+
+      .radbtn {
+        width: 24px;
+        height: 24px;
+        background-repeat: no-repeat;
+      }
+
+      .not_sel {
+        background-image: url("icons/radio-button-off.svg");
+      }
+
+      .sel {
+        background-image: url("icons/radio-button-on.svg");
+      }
+    }
+  }
+}
+
+.dropdowns {
+  @include flexColumn(space-between, normal, 33px);
+
+  .dd_container {
+    @include flexColumn(start, normal, 0px);
+
+    padding: 0px;
+    border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
+    font-size: 16px;
+  }
+
+  .picker {
+    color: $secondaryTextColor;
+    font-size: $smallText;
+  }
+
+  .dropdown {
+    @include flexRow(space-between, center, 0px);
+  }
+
+  .dd_list {
+    position: absolute;
+    @include flexColumn(start, normal, 20px);
+    display: none;
+    background-color: rgb(165, 165, 241);
+    width: 425px;
+    border-radius: 2px;
+
+    .dd_element {
+      @include flexRow(space-between, normal, 0px);
+    }
+  }
+
+  #st_dd {
+    top: 325px;
+  }
+
+  #dis_dd {
+    top: 401px;
+  }
+}
+
+.greybott {
+  border-bottom: rgba(0, 0, 0, 0.1) 2px solid;
+}
+
+.inputs {
+  margin-top: 50px;
+  width: 100%;
+  @include flexColumn(start, normal, 35px);
+
+  .input {
+    input,
+    div input {
+      width: 100%;
+      line-height: 200%;
+      border: none;
+      font-size: 16px;
+    }
+  }
+
+  .input > input::placeholder,
+  .input > div > input::placeholder {
+    font-size: 16px;
+    color: $secondaryTextColor;
+  }
+
+  .input > input:focus,
+  .input > div > input:focus {
+    border: none;
+    outline: none;
+  }
+
+  .input {
+    .forgot {
+      text-align: end;
+      color: $themeText;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    #input_pass,
+    #input_un {
+      @include flexRow(space-between, normal, 0px);
+    }
+
+    #input_pass {
+      #see {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.remember_me {
+  margin-top: 20px;
+  @include flexRow(start, normal, 5px);
+}
+
+.submit_button {
+  margin: 34px auto 0px auto;
+  height: 40px;
+  width: 215px;
+
+  button {
+    height: 100%;
+    width: 100%;
+    background-color: #3fd28b;
+    border: none;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+}
+
+footer {
+  height: auto;
+  width: 100%;
+  @include flexColumn(center, center, 0px);
+  bottom: 0;
+
+  .above_moreinfo {
+    @include flexRow(start, normal, 0px);
+    margin-bottom: 16px;
+
+    .about {
+      border-right: 1px solid #0000001f;
+    }
+
+    .pd-5 {
+      padding: 0px 20px;
+      color: $themeText;
+    }
+  }
+}
+
+.moreinfo {
+  width: 100%;
+  background-color: #e0e1e1;
+  @include flexRow(center, center, 20px);
+  padding: 10px;
+  font-size: $smallText;
+
+  .quantumlogo {
+    padding-right: 20px;
+    border-right: 1px solid #0000001f;
+  }
+
+  .dev_name {
+    font-weight: bolder;
+  }
+}
+
+.class_dd {
+  @include flexRow(space-between, center, 0px);
+}
+
+.justcheck {
+  display: none;
+}

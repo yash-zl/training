@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF_8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Dashboard</title>
+    <!-- <link rel="stylesheet" href="index.css" />-->
+    <link rel="stylesheet" href="scss_index.css" />
+    <link rel="stylesheet" href="scss_dashboard.css" />
+  </head>
+
+  <body>
+    <script>
+      // function close_all() {
+      //   alerts_dd = document.querySelector("#alerts_dd");
+      //   ann_dd = document.querySelector("#announcements_dd");
+      //   ham_dd = document.querySelector(".ham_menu_links_dd");
+      //   if (ann_dd.style.display == "flex") {
+      //     ann_dd.style.display = "none";
+      //   }
+      //   if (ham_dd.style.display != "none") {
+      //     ham_dd.style.display = "none";
+      //   }
+      //   if (alerts_dd.style.display != "none") {
+      //     alerts_dd.style.display = "none";
+      //   }
+      // }
+    </script>
+    <header>
+      <div class="header_logo">
+        <img src="icons/logo used in header.svg" alt="" />
+      </div>
+      <div class="links">
+        <div class="ham_menu_links">
+          <a id="dashboard" class="navbar_link medium">Dashboard</a>
+          <a id="content" class="navbar_link medium">Content</a>
+          <a id="users" class="navbar_link medium">Users</a>
+          <a id="reports" class="navbar_link medium">Reports</a>
+          <a id="admin" class="navbar_link medium">Admin</a>
+        </div>
+
+        <a id="alerts" class="navbar_link alerts_link">
+          <img src="icons/alerts.svg" alt="" />
+          <div class="badge small">2</div>
+        </a>
+        <div id="alerts_dd" class="abs">
+          <div id="alerts_dd_all"></div>
+          <div class="show_create_ann_container">
+            <div class="show_create_ann medium">
+              <div class="right-border medium">SHOW ALL</div>
+              <div>CREATE NEW</div>
+            </div>
+          </div>
+        </div>
+        <script>
+          // class alert {
+          //   constructor(content, checked, second_line, date, time) {
+          //     this.content = content;
+          //     this.checked = checked;
+          //     this.second_line = second_line;
+          //     this.date = date;
+          //     this.time = time;
+          //   }
+          // }
+
+          // all_alerts = [
+          //   new alert(
+          //     "License for introduction to Algebra has been assigned to your school",
+          //     false,
+          //     undefined,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          //   new alert(
+          //     "Lesson 3 Practice Worksheet overdue for Amy Santiago",
+          //     true,
+          //     { key: "Course", value: "Advanced Mathematics" },
+          //     [15, "Sep", 2018],
+          //     [5, 21, "pm"]
+          //   ),
+          //   new alert(
+          //     "23 new students created",
+          //     false,
+          //     undefined,
+          //     [14, "Sep", 2018],
+          //     [1, 21, "pm"]
+          //   ),
+          //   new alert(
+          //     "15 submissions ready for evaluation",
+          //     false,
+          //     { key: "Class", value: "Basics of Algebra" },
+          //     [13, "Sep", 2018],
+          //     [1, 15, "pm"]
+          //   ),
+          //   new alert(
+          //     "License for Basic Concepts in Geometry has been assigned to your school",
+          //     false,
+          //     undefined,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          //   new alert(
+          //     "Lesson 3 Practice Worksheet overdue for Rosa Diaz",
+          //     true,
+          //     { key: "Course", value: "Mathematics" },
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          // ];
+          // alerts = document.getElementById("alerts_dd_all");
+
+          // all_alerts.forEach((a) => {
+          //   ann = document.createElement("div");
+          //   ann.setAttribute("class", "ann_container");
+          //   a.checked ? ann.classList.add("checked") : undefined;
+          //   ih = `
+          //   <div class="announcement flex-col">
+          // <div class="content">${a.content}</div>
+
+          // ${
+          //   a.second_line
+          //     ? `<div class="flex-start al_second_line"><span class="sl_key">${a.second_line.key}:</span><span class="sl_value">&nbsp;${a.second_line.value}</span></div>`
+          //     : ``
+          // }
+
+          // <div class="flex-end date_time">
+          //   <span class="date">${
+          //     a.date[0] + "-" + a.date[1] + "-" + a.date[2]
+          //   }</span>&nbsp;at&nbsp;
+          //   <span class="time">${
+          //     a.time[0] + ":" + a.time[1] + " " + a.time[2]
+          //   }</span>
+          //   </div>
+          //   </div>
+          //   </div>
+
+          //   `;
+
+          //   ann.innerHTML = ih;
+
+          //   alerts.appendChild(ann);
+          // });
+        </script>
+        <script>
+          // alerts = document.querySelector("#alerts");
+          // alerts_dd = document.querySelector("#alerts_dd");
+          // ann_dd = document.querySelector("#announcements_dd");
+          // ham_dd = document.querySelector(".ham_menu_links_dd");
+          // alerts.addEventListener("mouseover", () => {
+          //   close_all();
+          //   alerts_dd.style.display = "block";
+          // });
+
+          // alerts_dd.addEventListener("mouseover", () => {
+          //   close_all();
+          //   alerts_dd.style.display = "block";
+          // });
+
+          // alerts_dd.addEventListener("mouseout", () => {
+          //   alerts_dd.style.display = "none";
+          // });
+        </script>
+        <!-- <div class="abs dd">Hi</div> -->
+        <a
+          id="announcements"
+          onmouseover="mouseover('announcements')"
+          class="navbar_link announcements_link"
+        >
+          <img src="icons/announcements.svg" alt="" />
+          <div class="badge small">1</div>
+        </a>
+        <div id="announcements_dd" class="abs">
+          <div id="announcements_dd_all"></div>
+          <div class="show_create_ann_container">
+            <div class="show_create_ann">
+              <div class="right-border medium">SHOW ALL</div>
+              <div>CREATE NEW</div>
+            </div>
+          </div>
+        </div>
+        <a
+          id="profile"
+          onmouseover="mouseover('profile')"
+          class="navbar_link profile"
+        >
+          <img src="icons/account_circle.svg" alt="" />
+          <div class="badge small">T</div>
+        </a>
+        <script>
+          // class announcement {
+          //   constructor(
+          //     pa,
+          //     checked,
+          //     content,
+          //     course,
+          //     files_attached,
+          //     date,
+          //     time
+          //   ) {
+          //     this.pa = pa;
+          //     this.checked = checked;
+          //     this.content = content;
+          //     this.course = course;
+          //     this.files_attached = files_attached;
+          //     this.date = date;
+          //     this.time = time;
+          //   }
+          // }
+
+          // announcements = [
+          //   new announcement(
+          //     "Wilson Kumar",
+          //     true,
+          //     "No classes will be held on 21st Nov",
+          //     undefined,
+          //     2,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          //   new announcement(
+          //     "Samson White",
+          //     false,
+          //     "Guest lecture on Geometry on 20th September",
+          //     undefined,
+          //     2,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          //   new announcement(
+          //     "Wilson Kumar",
+          //     true,
+          //     "Additional course materials available on request",
+          //     "Mathematics 101",
+          //     undefined,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          //   new announcement(
+          //     "Wilson Kumar",
+          //     false,
+          //     "No classes will be held on 25th Dec",
+          //     undefined,
+          //     undefined,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          //   new announcement(
+          //     "Wilson Kumar",
+          //     false,
+          //     "Additional course materials available on request",
+          //     "Mathematics 101",
+          //     undefined,
+          //     [15, "Sep", 2018],
+          //     [7, 21, "pm"]
+          //   ),
+          // ];
+
+          // all_ann = document.getElementById("announcements_dd_all");
+
+          // announcements.forEach((a) => {
+          //   ann = document.createElement("div");
+          //   ann.setAttribute("class", "ann_container");
+          //   a.checked ? ann.classList.add("checked") : undefined;
+          //   ih = `
+          //   <div class="announcement flex-col">
+          //     <div class="ann_pa_check">
+          //       <div class="pa">PA: <span class="pa_name">${a.pa}</span></div>
+          //       <div class="check">
+          // <img
+          // height="18px"
+          // src=${a.checked ? "icons/tick-green.png" : "icons/minus-green-1.png"}
+          // alt=""
+          // />
+          // </div>
+          // </div>
+          // <div class="content">${a.content}</div>
+          // <div class="course">${a.course == undefined ? `` : a.course}</div>
+          // <div class=" files_attached ${a.files_attached ? "" : "flex-end"}">
+          //   <div class="files_attached_num_div">${
+          //     a.files_attached
+          //       ? `<img height="12px" src="icons/files.png" alt="" /><span
+          // class="files_attached_num">` +
+          //         a.files_attached +
+          //         `</span>&nbsp;files are attached
+          // </div>`
+          //       : ""
+          //   }
+
+          // <div class="date_time">
+          //   <span class="date">${
+          //     a.date[0] + "-" + a.date[1] + "-" + a.date[2]
+          //   }</span>&nbsp;at
+          //   <span class="time">${
+          //     a.time[0] + ":" + a.time[1] + " " + a.time[2]
+          //   }</span>
+          //   </div>
+          //   </div>
+          //   </div>
+
+          //   `;
+
+          //   ann.innerHTML = ih;
+
+          //   all_ann.appendChild(ann);
+          // });
+        </script>
+        <script>
+          // announcements = document.querySelector("#announcements");
+          // announ_dd = document.querySelector("#announcements_dd");
+          // announcements.addEventListener("mouseover", () => {
+          //   close_all();
+          //   announ_dd.style.display = "flex";
+          // });
+
+          // announ_dd.addEventListener("mouseover", () => {
+          //   close_all();
+          //   announ_dd.style.display = "flex";
+          // });
+
+          // announ_dd.addEventListener("mouseout", () => {
+          //   announ_dd.style.display = "none";
+          // });
+        </script>
+        <a id="hamburger" class="navbar_link" href="">
+          <img src="icons/hamburger-menu.svg" alt="" />
+        </a>
+        <div class="ham_menu_links_dd"></div>
+        <script>
+          // ham_dd = document.querySelector(".ham_menu_links_dd");
+          // ham_dd_content = [
+          //   {
+          //     item: "dashboard",
+          //     sub_items: [],
+          //   },
+          //   {
+          //     item: "content",
+          //     sub_items: ["course catalog"],
+          //   },
+          //   {
+          //     item: "Users",
+          //     sub_items: ["user 1", "user 2", "user 3"],
+          //   },
+          //   {
+          //     item: "reports",
+          //     sub_items: ["report1"],
+          //   },
+          //   {
+          //     item: "admin",
+          //     sub_items: ["admin function 1"],
+          //   },
+          // ];
+          // console.log(ham_dd_content);
+
+          // ham_dd_content.forEach((element) => {
+          //   dd_el = document.createElement("div");
+          //   dd_el.setAttribute("id", "dd_el_" + element.item);
+          //   dd_el_ih = `<div id="dd_${element.item}" class='dd_item_head' onclick="open_item_in_dd('${element.item}')">${element.item}`;
+          //   console.log(element.sub_items);
+          //   if (element.sub_items.length > 0) {
+          //     dd_el_ih = dd_el_ih.concat(
+          //       `<img  src='/icons/arrow-down.svg' alt="" /></div>`
+          //     );
+          //     element.sub_items.forEach((si) => {
+          //       dd_el_ih = dd_el_ih.concat(`
+          //     <div class="dd_el_si ${element.item}_si" alt="">${si}</div>
+          //     `);
+          //     });
+          //   } else {
+          //     dd_el_ih = dd_el_ih.concat("</div>");
+          //   }
+          //   dd_el.innerHTML = dd_el_ih;
+          //   ham_dd.appendChild(dd_el);
+          // });
+
+          // ham_selected = "";
+
+          // function close_in_dd(ham_selected) {
+          //   sis = document.querySelectorAll("." + ham_selected + "_si");
+          //   sis.forEach((si) => {
+          //     si.style.display = "none";
+          //   });
+          //   prev_ih = document.querySelector("#dd_el_" + ham_selected);
+          //   prev_ig_img = prev_ih.querySelector("img");
+          //   prev_ig_img.setAttribute("src", "/icons/arrow-down.svg");
+          //   // prev_ig_img = prev_ih.querySelector("img");
+          //   // console.log(img);
+          //   prev_ig_img.setAttribute("height", "24px");
+          //   prev_ig_img.style.padding = "0px";
+          //   prev_ih.style.background = "white";
+          // }
+
+          // open_ham = "";
+
+          // function open_item_in_dd(item) {
+          //   if (ham_selected != "") {
+          //     close_in_dd(ham_selected);
+          //   }
+
+          //   if (open_ham == item && ham_selected == item) {
+          //     close_in_dd(item);
+          //     open_ham = "";
+          //     return;
+          //   }
+
+          //   console.log(item);
+          //   ih = document.querySelector("#dd_el_" + item);
+          //   ih.style.background = "#F3F3F3";
+          //   sis = ih.querySelectorAll("." + item + "_si");
+          //   console.log(sis.length);
+          //   sis.forEach((si) => {
+          //     // si.classList.add("show");
+          //     si.style.display = "block";
+          //   });
+          //   arr = ih.querySelector("img");
+          //   arr.setAttribute("src", "/icons/arrow-up (1).png");
+          //   arr.setAttribute("height", "13px");
+          //   arr.style.padding = "5px";
+
+          //   ham_selected = item;
+          //   open_ham = item;
+          // }
+        </script>
+      </div>
+    </header>
+    <div class="section_courses_classes">
+      <div class="header_of_section">
+        <div
+          id="courses"
+          class="section_option large courses_option sel_section"
+        >
+          <div class="icon_center courses_icon">
+            <img src="icons/courses.svg" alt="" />&nbsp;
+          </div>
+          <div class="num_section courses_num">4&nbsp;</div>
+          Courses
+        </div>
+        <div id="classes" class="section_option large classes_option">
+          <div class="icon_center classes_icon">
+            <img src="icons/classes.svg" alt="" />&nbsp;
+          </div>
+          <div class="num_section classes_num">4&nbsp;</div>
+          Classes
+        </div>
+      </div>
+      <div class="section_info">
+        <div class="num_available_of_option small">
+          Showing&nbsp;<span class="shown_num">4&nbsp;</span> of&nbsp;
+          <span class="total_num">4&nbsp;</span
+          ><span class="section_name">&nbsp;Courses</span>
+        </div>
+        <div class="sorting_info small">
+          <div class="sort_by">Sort By:</div>
+          <div class="sort_method large greybott">
+            <div class="method_name">Course Name</div>
+            <div class="flex-end large_dd_arrow">
+              <img src="icons/arrow-down.svg" alt="" />
+            </div>
+          </div>
+          <div class="ascending_or_descending">
+            <img src="icons/sort.svg" alt="" />
+          </div>
+        </div>
+      </div>
+      <div id="section_card_grid"></div>
+
+      <footer>
+        <div class="above_moreinfo">
+          <div class="about pd-5">About</div>
+          <div class="contact_us pd-5">Contact Us</div>
+        </div>
+        <div class="moreinfo">
+          <div class="quantumlogo">
+            <img src="icons/logo used in footer.svg" alt="" />
+          </div>
+          <div class="copyright">Copyright © 2020-2021</div>
+          <div class="dev_name">Zeus Systems Pvt. Ltd.</div>
+          <div class="copyright">All rights reserved.</div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="ts/index.js"></script>
+  </body>
+</html>

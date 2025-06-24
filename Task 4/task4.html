@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .grid {
+        display: grid;
+        gap: 2px;
+        grid-template: repeat(68, 5px) / repeat(25, 20px);
+        color: white;
+        font-weight: bold;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: red;
+      }
+
+      .h,
+      .f {
+        background-image: linear-gradient(
+          to bottom right,
+          #6a54dd,
+          #8c72e8 60%,
+          #8e78dd
+        );
+      }
+
+      .h {
+        grid-row: 1 / 10;
+        grid-column: 1 / -1;
+      }
+
+      .s {
+        grid-row: 10 / 58;
+        grid-column: 1 / 8;
+        background-image: linear-gradient(to bottom right, #3bd1c6, #30a49b);
+      }
+
+      .comm-grad {
+        background-image: linear-gradient(
+          to bottom right,
+          #6659dc 10%,
+          #1ea9fa 85%,
+          #39d7e0
+        );
+      }
+
+      .c1 {
+        grid-row: 10 / 34;
+        grid-column: 8 / -1;
+        background-image: linear-gradient(
+          to bottom right,
+          #6659dc 10%,
+          #2e8bf0 60%,
+          #15a6f9 80%,
+          #39d7e0
+        );
+      }
+
+      .c2 {
+        grid-row: 34 / 58;
+        grid-column: 8 / 17;
+      }
+
+      .c3 {
+        grid-row: 34 / 58;
+        grid-column: 17 / -1;
+      }
+
+      .f {
+        grid-row: 58 / -1;
+        grid-column: 1 / -1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid">
+      <div class="container h">Header</div>
+      <div class="container s">Sidebar</div>
+      <div class="container c1 comm-grad">Content-1</div>
+      <div class="container c2 comm-grad">Content-2</div>
+      <div class="container c3 comm-grad">Content-3</div>
+      <div class="container f">Footer</div>
+    </div>
+  </body>
+</html>

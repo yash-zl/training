@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        box-sizing: border-box;
+        font-family: sans-serif;
+        padding: 10px;
+      }
+
+      form > div {
+        margin-bottom: 10px;
+      }
+
+      form > div > label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .heading {
+        display: flex;
+        justify-content: center;
+        letter-spacing: 1ch;
+        color: rgb(252, 252, 198);
+      }
+
+      h3 {
+        display: block;
+      }
+
+      .uc {
+        text-transform: uppercase;
+      }
+
+      .it {
+        font-style: italic;
+      }
+
+      .greenbg {
+        background-color: green;
+      }
+
+      .maroonbg {
+        background-color: #990000;
+      }
+
+      .redbottom {
+        border-bottom: 15px #cc0000 solid;
+      }
+
+      .greybg {
+        background-color: #cccccc;
+      }
+
+      .yellowbg {
+        background-color: #ffffcc;
+      }
+
+      h2 {
+        padding: 5px 5px 5px 15px;
+        background-color: #009900;
+        color: white;
+      }
+
+      h3 > b {
+        color: grey;
+      }
+
+      .tableborder {
+        border: 1px solid black;
+      }
+
+      .err {
+        display: none;
+      }
+
+      ul {
+        color: #a21813;
+        font-weight: 550;
+      }
+
+      .zeuslink {
+        color: #810381;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body class="yellowbg">
+    <div class="heading maroonbg redbottom">
+      <h1 class="" style="margin: 0; padding: 10px">
+        <i>My first web page</i>
+      </h1>
+    </div>
+    <div>
+      <h2>What this is</h2>
+      <p>
+        Welcome to <i>my first webpage</i>. I created this webpage wiothout the
+        assistance of a webpage editor. Just my little text editor and keen
+        <b class="uc it">understanding of html</b>.
+      </p>
+    </div>
+    <div>
+      <h2>Why this is</h2>
+      <ul class="it">
+        <li>To learn HTML</li>
+        <li>
+          List element
+
+          <ol>
+            <li>Home</li>
+            <li>FAQ</li>
+            <li>Contact</li>
+            <li>About</li>
+          </ol>
+        </li>
+        <li>How I have created ordered and unordered list</li>
+      </ul>
+    </div>
+    <div>
+      <h2>ZeusLearning.com</h2>
+      <a class="zeuslink" href="https://www.zeuslearning.com" target="_blank"
+        >This link will open zeuslearning.com in a new tab.</a
+      >
+    </div>
+    <div>
+      <h2>On click of following image navigate to Google.com</h2>
+      <a href="https://www.google.com" class="href"
+        ><img
+          style="padding: 1em; background-color: white"
+          height="75px"
+          src="google_img.png"
+          alt=""
+        />
+      </a>
+    </div>
+    <div>
+      <h3><b>Some random table</b></h3>
+      <table class="greybg" class="tableborder">
+        <tr class="tableborder">
+          <td class="tableborder">Row 1, cell 1</td>
+          <td class="tableborder">Row 1, cell 2</td>
+          <td class="tableborder">Row 1, cell 3</td>
+        </tr>
+        <tr class="tableborder">
+          <td class="tableborder">Row 2, cell 1</td>
+          <td class="tableborder">Row 2, cell 2</td>
+          <td class="tableborder">Row 2, cell 3</td>
+        </tr>
+        <tr class="tableborder">
+          <td class="tableborder">Row 3, cell 1</td>
+          <td class="tableborder">Row 3, cell 2</td>
+          <td class="tableborder">Row 3, cell 3</td>
+        </tr>
+        <tr class="tableborder">
+          <td class="tableborder">Row 4, cell 1</td>
+          <td class="tableborder">Row 4, cell 2</td>
+          <td class="tableborder">Row 4, cell 3</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h3><b>Some random form</b></h3>
+      <p><b>Note:</b> It looks the part, but won't do anything.</p>
+      <form action="">
+        <div>
+          <label for="name" style="display: block">Name</label>
+          <input
+            class="input1"
+            placeholder="Your name"
+            type="text"
+            name="name"
+            id="name"
+          />
+          <div class="err err1">You haven't entered your name. Please do.</div>
+        </div>
+        <div>
+          <label for="comments" style="display: block">Comments</label>
+          <textarea
+            class="input2"
+            placeholder="Your comments"
+            rows="10"
+            cols="25"
+            name="comments"
+            id="comments"
+            style="overflow-y: scroll"
+          ></textarea>
+          <div class="err err2">
+            It seems like you haven't entered any comments. Please do to
+            proceed.
+          </div>
+        </div>
+        <div>
+          <label for="gender" style="margin-bottom: 10px">Are you:</label>
+          <div id="gender" name="gender">
+            <div style="margin-bottom: 5px">
+              <input type="radio" name="gender" id="male" />
+              <label for="male">Male</label>
+            </div>
+            <div style="margin-bottom: 5px">
+              <input type="radio" name="gender" id="female" />
+              <label for="male">Female</label>
+            </div>
+          </div>
+          <div class="err err0">Please select a gender to proceed.</div>
+        </div>
+        <button
+          type="submit"
+          style="padding: 5px 20px 5px 20px"
+          onclick="validate(event)"
+        >
+          Submit Query
+        </button>
+      </form>
+    </div>
+    <script>
+      function validate(event) {
+        event.preventDefault();
+        const name = document.querySelector("#name");
+        const comment = document.querySelector("#comments");
+        document.querySelector(".err").style.display = "none";
+        [0, 1, 2].forEach((i) => {
+          document.querySelector(".err" + i).style.display = "none";
+          //   document.querySelector(".input" + i).style.border = "0px";
+        });
+        radios = document.querySelectorAll("#gender>div>input");
+        r0 = radios[0];
+        r1 = radios[1];
+
+        console.log(name.value);
+        console.log(comment.value);
+
+        if (r0.checked == r1.checked) {
+          problem(0);
+          return;
+        } else if (name.value == "" || name.value == undefined) {
+          // console.log('cheking');
+          problem(1);
+          return;
+        } else if (comments.value == "" || comments.value == undefined) {
+          problem(2);
+          return;
+        }
+        document.querySelector("#goodtogo").style.display = "block";
+      }
+
+      function problem(num) {
+        console.log(num);
+        document.querySelector(".err" + num).style.display = "block";
+        inp = document.querySelector(".input" + num);
+        inp.focus();
+        inp.style.border = "2px solid red;";
+        // onfocus="this.style.backgroundColor='lightblue'
+      }
+    </script>
+  </body>
+</html>

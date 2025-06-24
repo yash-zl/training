@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        form>div {
+            margin-bottom: 10px;
+        }
+
+        form>div>label {
+            display:block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="heading">My first web page</h1>
+    <h3>What this is</h4>
+        <p>Welcome to <i>my first webpage</i>. I created this webpage wiothout the assistance of a webpage editor. Just my
+            little text editor and keen <b>understanding of html</b></h4>
+        <h3>Why this is</h4>
+            <ul>
+                <li>To learn HTML</li>
+                <li>List element</li>
+                <li>
+                    <ol>
+                        <li>Home</li>
+                        <li>FAQ</li>
+                        <li>Contact</li>
+                        <li>About</li>
+                    </ol>
+                </li>
+                <li>How I have created ordered and unordered list</li>
+            </ul>
+            <h3>ZeusLearning.com</h4>
+                <a href="https://www.zeuslearning.com" target="_blank">This link will open zeuslearning.com in a new
+                    tab.</a>
+                <h3>On click of following image navigate to Google.com</h4>
+                    <a href="https://www.google.com" class="href"><img height="75px" src="google_img.png" alt="">
+                    </a>
+                    <h4><b>Some random table</b></h4>
+                    <table style="border: 1px solid black;">
+                        <tr style="border: 1px solid black;">
+                            <td style="border: 1px solid black;">Row 1, cell 1</td>
+                            <td style="border: 1px solid black;">Row 1, cell 2</td>
+                            <td style="border: 1px solid black;">Row 1, cell 3</td>
+                        </tr>
+                        <tr style="border: 1px solid black;">
+                            <td style="border: 1px solid black;">Row 2, cell 1</td>
+                            <td style="border: 1px solid black;">Row 2, cell 2</td>
+                            <td style="border: 1px solid black;">Row 2, cell 3</td>
+                        </tr>
+                        <tr style="border: 1px solid black;">
+                            <td style="border: 1px solid black;">Row 3, cell 1</td>
+                            <td style="border: 1px solid black;">Row 3, cell 2</td>
+                            <td style="border: 1px solid black;">Row 3, cell 3</td>
+                        </tr>
+                        <tr style="border: 1px solid black;">
+                            <td style="border: 1px solid black;">Row 4, cell 1</td>
+                            <td style="border: 1px solid black;">Row 4, cell 2</td>
+                            <td style="border: 1px solid black;">Row 4, cell 3</td>
+                        </tr>
+                    </table>
+                    <h4><b>Some random form</b></h4>
+                    <p><b>Note:</b> It looks the part, but won't do anything.</p>
+                    <form action="">
+                        <div>
+                            <label for="name" style="display: block;">Name</label>
+                            <input type="text" name="name" id="name">
+                        </div>
+                        <div>
+                            <label for="comments" style="display:block;">Comments</label>
+                            <textarea cols="25" rows="10" name="comments" id="comments" style=" overflow-y: scroll"></textarea>
+                        </div>
+                        <div>
+                            <label for="gender" style="margin-bottom: 10px;">Are you:</label>
+                            <div name="gender">
+                                <div style="margin-bottom: 5px;">
+                                    <input type="radio" name="male" id="male">
+                                    <label for="male">Male</label>
+                                </div>
+                                <div style="">
+                                    <input type="radio" name="female" id="female">
+                                    <label for="male">Female</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" style="padding: 5px 20px 5px 20px;">Submit Query</button>
+                    </form>
+
+</body>
+
+</html>

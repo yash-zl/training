@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Login</title>
+    <link rel="stylesheet" href="/scss_index.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        class="header_logo"
+        src="/icons/logo used in header.svg"
+        alt="header_logo"
+      />
+    </header>
+    <div class="form_div">
+      <form action="\">
+        <div class="form_header">
+          <img src="/icons/back.svg" class="back" color />
+          <div class="form_purpose">Log in with Quantum</div>
+          <img src="/icons/back.svg" class="back dis_none" color />
+        </div>
+        <div class="rad_btn_container">
+          <div class="rad_btn_opt" onclick="dis_is('dis')">
+            <div class="radbtn not_sel" id="disrb"></div>
+            District
+          </div>
+          <div class="rad_btn_opt" onclick="dis_is('is')">
+            <div class="radbtn not_sel" id="isrb"></div>
+            Independent school
+          </div>
+        </div>
+        <div class="dropdowns">
+          <div class="dd_container">
+            <label for="state_picker" class="picker">State*</label>
+            <div class="dropdown" onclick="dd('st')">
+              <div class="state_dd_value">Alabama</div>
+              <div id="state_dd_btn">
+                <img src="/icons/arrow-down.svg" alt="" />
+              </div>
+            </div>
+          </div>
+          <div id="st_dd" class="dd_list">
+            <div class="dd_element">
+              Alabama
+              <div
+                id="dd_close_btn"
+                onclick="close_dd(
+                'st'
+              )"
+              >
+                <img
+                  style="margin-right: 9px"
+                  src="/icons/arrow-up (1).png"
+                  height="12px"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div class="dd_element">California</div>
+            <div class="dd_element">Seattle</div>
+            <div class="dd_element">Texas</div>
+          </div>
+          <div class="dd_container">
+            <label for="district_picker" class="picker">District*</label>
+            <div class="dropdown" onclick="dd('dis')">
+              <div class="district_dd_value">Alabama School District</div>
+              <div id="district_dd_btn">
+                <img src="/icons/arrow-down.svg" alt="" />
+              </div>
+            </div>
+          </div>
+          <div id="dis_dd" class="dd_list">
+            <div class="dd_element">
+              Alabama School District
+              <div
+                id="dd_close_btn"
+                onclick="close_dd(
+                'dis'
+              )"
+              >
+                <img
+                  style="margin-right: 9px"
+                  src="/icons/arrow-up (1).png"
+                  height="12px"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div class="dd_element">California School District</div>
+            <div class="dd_element">Seattle School District</div>
+            <div class="dd_element">Texas School District</div>
+          </div>
+        </div>
+
+        <div class="inputs">
+          <div class="input">
+            <div id="input_un" class="greybott">
+              <input name="un" placeholder="Username/Email ID*" type="text" />
+            </div>
+            <div class="forgot">Forgot Username?</div>
+          </div>
+          <div class="input">
+            <div id="input_pass" class="greybott">
+              <input name="pw" placeholder="Password*" type="passowrd" />
+              <div id="see">
+                <img src="/icons/preview.svg" alt="" />
+              </div>
+            </div>
+            <div class="forgot">Forgot Password?</div>
+          </div>
+        </div>
+        <div class="remember_me">
+          <div id="rem_me_cb" class="checkbox not_sel_cb" onclick="rem_me()">
+            <img src="/icons/checkbox-unchecked.svg" alt="rem_icon" />
+          </div>
+          <div class="rem_me_text">Remember Me</div>
+        </div>
+        <div class="submit_button">
+          <button type="submit">LOG IN</button>
+        </div>
+      </form>
+    </div>
+    <footer>
+      <div class="above_moreinfo">
+        <div class="about pd-5">About</div>
+        <div class="contact_us pd-5">Contact Us</div>
+      </div>
+      <div class="moreinfo">
+        <div class="quantumlogo">
+          <img src="icons/logo used in footer.svg" alt="" />
+        </div>
+        <div class="copyright">Copyright © 2020-2021</div>
+        <div class="dev_name">Zeus Systems Pvt. Ltd.</div>
+        <div class="copyright">All rights reserved.</div>
+      </div>
+    </footer>
+    <script>
+      dis_is_map = new Map();
+      dis_is_map.set("dis", false);
+      dis_is_map.set("is", false);
+
+      function dis_is(rad_selected) {
+        if (rad_selected == "is") {
+          dis_is_map.set("dis", false);
+          dis_is_map.set("is", true);
+        } else {
+          dis_is_map.set("dis", true);
+          dis_is_map.set("is", false);
+        }
+
+        update_using_states();
+      }
+
+      function update_using_states() {
+        for (const [key, value] of dis_is_map) {
+          if (value == true) {
+            sel_rad = document.querySelector("#" + key + "rb");
+            sel_rad.classList.remove("not_sel");
+            sel_rad.classList.add("sel");
+          } else {
+            not_sel_rad = document.querySelector("#" + key + "rb");
+            not_sel_rad.classList.remove("sel");
+            not_sel_rad.classList.add("not_sel");
+          }
+        }
+      }
+
+      dropdowns_map = new Map();
+      dropdowns_map.set("st", false);
+      dropdowns_map.set("dis", false);
+      // dropdowns.set("is", false);
+
+      function dd(dd_sel) {
+        if (dd_sel == "st") {
+          dropdowns_map.set("st", true);
+          dropdowns_map.set("dis", false);
+        } else {
+          dropdowns_map.set("dis", true);
+          dropdowns_map.set("st", false);
+        }
+
+        update_dds();
+      }
+
+      function close_dd(dd) {
+        dropdowns_map.set(dd, false);
+        update_dds();
+      }
+
+      function update_dds() {
+        for (const [key, value] of dropdowns_map) {
+          if (value == true) {
+            sel_dd = document.querySelector("#" + key + "_dd");
+            sel_dd.style.display = "flex";
+          } else {
+            not_sel_dd = document.querySelector("#" + key + "_dd");
+            not_sel_dd.style.display = "none";
+          }
+        }
+      }
+
+      function rem_me() {
+        rem_me_cb = document.querySelector("#rem_me_cb");
+        img_rem_me = rem_me_cb.querySelector("img");
+        if (img_rem_me.getAttribute("src") == "/icons/checkbox-unchecked.svg") {
+          img_rem_me.setAttribute("src", "/icons/checkbox-checked.svg");
+        } else {
+          img_rem_me.setAttribute("src", "/icons/checkbox-unchecked.svg");
+        }
+      }
+    </script>
+  </body>
+</html>

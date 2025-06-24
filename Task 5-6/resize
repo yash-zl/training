@@ -1,0 +1,97 @@
+.navbar_link {
+  color: #3fd28b;
+  @include flexRow(center, center, 0px);
+  text-transform: uppercase;
+  font-size: $mediumText;
+  cursor: pointer;
+  height: 100%;
+  padding: 0px 5px 0px 5px;
+}
+
+.section_option {
+  @include flexRow(center, center, 0px);
+  width: 50%;
+  font-size: $largerText;
+}
+
+.num_available_of_option {
+  @include flexRow(start, end, 0px);
+  font-size: $smallText;
+}
+
+.sorting_info {
+  @include flexRow(space-between, center, 0px);
+  font-size: $smallText;
+  /* gap: 20px; */
+  width: 26%;
+}
+
+.sort_method {
+  @include flexRow(space-between, center, 0px);
+
+  font-size: $largerText;
+  width: 70%;
+  /* border-bottom: 2px solid grey; */
+}
+
+.course_title {
+  width: 80%;
+  /* height: 10px; */
+  font-size: $largerText;
+  font-weight: bold;
+  overflow: hidden;
+  line-height: 150%;
+  /* min-height: 25px; */
+  max-height: 50px;
+  /* text-overflow: ellipsis;
+  white-space: nowrap; */
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
+}
+
+.small {
+  font-size: $smallText;
+}
+
+.badge {
+  display: flex;
+  height: $mediumText;
+  width: $mediumText;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: $smallText;
+}
+
+.expired {
+  font-size: $smallText;
+  background-color: #ffe4e6;
+  color: #d80000;
+  width: min-content;
+  padding: 1px 2px 1px 2px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.announcement > div {
+  font-size: $smallText;
+  @include flexRow(space-between, center, 0px);
+}
+
+.announcement > .content {
+  font-size: $mediumText;
+}
+
+.ann_container {
+  padding: 10px $largerText;
+}
+
+.show_create_ann > div {
+  @include flexRow(center, center, 0px);
+  width: 50%;
+  font-size: $mediumText;
+}
