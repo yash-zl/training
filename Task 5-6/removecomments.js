@@ -2,7 +2,7 @@ function remove(code) {
   lines = code.split("\n");
   rewritten_code = ``;
   for (line in lines) {
-    if (!line.trim().includes("//")) {
+    if (!line.trim().includes(".//")) {
       rewritten_code = rewritten_code.concat(line + "\n");
     }
   }
@@ -371,7 +371,7 @@ console.log(
           //   console.log(element.sub_items);
           //   if (element.sub_items.length > 0) {
           //     dd_el_ih = dd_el_ih.concat(
-          //       --string_denotion--<img  src='/icons/arrow-down.svg' alt="" /></div>--string_denotion--
+          //       --string_denotion--<img  src='./icons/arrow-down.svg' alt="" /></div>--string_denotion--
           //     );
           //     element.sub_items.forEach((si) => {
           //       dd_el_ih = dd_el_ih.concat(--string_denotion--
@@ -394,7 +394,7 @@ console.log(
           //   });
           //   prev_ih = document.querySelector("#dd_el_" + ham_selected);
           //   prev_ig_img = prev_ih.querySelector("img");
-          //   prev_ig_img.setAttribute("src", "/icons/arrow-down.svg");
+          //   prev_ig_img.setAttribute("src", "./icons/arrow-down.svg");
           //   // prev_ig_img = prev_ih.querySelector("img");
           //   // console.log(img);
           //   prev_ig_img.setAttribute("height", "24px");
@@ -425,7 +425,7 @@ console.log(
           //     si.style.display = "block";
           //   });
           //   arr = ih.querySelector("img");
-          //   arr.setAttribute("src", "/icons/arrow-up (1).png");
+          //   arr.setAttribute("src", "./icons/arrow-up (1).png");
           //   arr.setAttribute("height", "13px");
           //   arr.style.padding = "5px";
 

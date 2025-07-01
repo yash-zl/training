@@ -281,7 +281,7 @@ ham_dd_content.forEach((element) => {
   console.log(element.sub_items);
   if (element.sub_items.length > 0) {
     dd_el_ih = dd_el_ih.concat(
-      `<img  src='/icons/arrow-down.svg' alt="" /></div>`
+      `<img  src='./icons/arrow-down.svg' alt="" /></div>`
     );
     element.sub_items.forEach((si) => {
       dd_el_ih = dd_el_ih.concat(`
@@ -304,7 +304,7 @@ function close_in_dd(ham_selected) {
   });
   prev_ih = document.querySelector("#dd_el_" + ham_selected);
   prev_ig_img = prev_ih.querySelector("img");
-  prev_ig_img.setAttribute("src", "/icons/arrow-down.svg");
+  prev_ig_img.setAttribute("src", "./icons/arrow-down.svg");
   // prev_ig_img = prev_ih.querySelector("img");
   // console.log(img);
   prev_ig_img.setAttribute("height", "24px");
@@ -335,7 +335,7 @@ function open_item_in_dd(item) {
     si.style.display = "block";
   });
   arr = ih.querySelector("img");
-  arr.setAttribute("src", "/icons/arrow-up (1).png");
+  arr.setAttribute("src", "./icons/arrow-up (1).png");
   arr.setAttribute("height", "13px");
   arr.style.padding = "5px";
 

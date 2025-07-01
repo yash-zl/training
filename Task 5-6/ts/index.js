@@ -131,7 +131,7 @@ ham_dd_content.forEach(function (element) {
     var dd_el_ih = "<div id=\"dd_".concat(element.item, "\" class='dd_item_head' onclick=\"openItemInDD('").concat(element.item, "')\">").concat(element.item);
     console.log(element.sub_items);
     if (element.sub_items.length > 0) {
-        dd_el_ih = dd_el_ih.concat("<img  src='/icons/arrow-down.svg' alt=\"\" /></div>");
+        dd_el_ih = dd_el_ih.concat("<img  src='./icons/arrow-down.svg' alt=\"\" /></div>");
         element.sub_items.forEach(function (si) {
             dd_el_ih = dd_el_ih.concat("\n              <div class=\"dd_el_si ".concat(element.item, "_si\" alt=\"\">").concat(si, "</div>\n              "));
         });

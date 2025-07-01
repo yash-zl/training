@@ -1,148 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Canvas Grid with Headers</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel-like Grid</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
     body {
       margin: 0;
+      padding: 0;
       overflow: hidden;
+      font-family: sans-serif;
     }
-    #wrapper {
+
+    #container {
       position: relative;
       width: 100vw;
       height: 100vh;
-      overflow: auto;
+      overflow: scroll;
     }
+
     canvas {
       position: absolute;
-      top: 0;
-      left: 0;
       display: block;
     }
-    #grid-canvas {
-      z-index: 1;
+
+    #grid {
+      z-index: 0;
     }
-    #row-header {
-      z-index: 2;
-      background: white;
-    }
+
+    #row-header,
     #col-header {
+      background: #f3f3f3;
       z-index: 2;
-      background: white;
+    }
+
+    #corner {
+      background: #e0e0e0;
+      z-index: 3;
     }
   </style>
 </head>
+
 <body>
-  <div id="wrapper">
-    <canvas id="grid-canvas"></canvas>
-    <canvas id="row-header"></canvas>
-    <canvas id="col-header"></canvas>
+  <div id="container">
+    <canvas id="grid"></canvas>
+    <canvas id="row_header"></canvas>
+    <canvas id="col_header"></canvas>
+    <canvas id="corner" height="30" width="60"></canvas>
   </div>
 
-  <script>
-    const gridCanvas = document.getElementById('grid-canvas');
-    const rowHeader = document.getElementById('row-header');
-    const colHeader = document.getElementById('col-header');
-    const gridCtx = gridCanvas.getContext('2d');
-    const rowCtx = rowHeader.getContext('2d');
-    const colCtx = colHeader.getContext('2d');
+  <script type="module" src="GridManager.js"></script>
 
-    const ROW_HEIGHT = 30;
-    const COL_WIDTH = 100;
-    const NUM_ROWS = 90;
-    const NUM_COLS = 60;
-    const ROW_HEADER_WIDTH = 60;
-    const COL_HEADER_HEIGHT = 30;
-    const DPR = window.devicePixelRatio || 1;
 
-    function resizeCanvases() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      gridCanvas.width = (width - ROW_HEADER_WIDTH) * DPR;
-      gridCanvas.height = (height - COL_HEADER_HEIGHT) * DPR;
-      gridCanvas.style.left = ROW_HEADER_WIDTH + 'px';
-      gridCanvas.style.top = COL_HEADER_HEIGHT + 'px';
-      gridCanvas.style.width = (width - ROW_HEADER_WIDTH) + 'px';
-      gridCanvas.style.height = (height - COL_HEADER_HEIGHT) + 'px';
-      gridCtx.setTransform(1, 0, 0, 1, 0, 0);
-      gridCtx.scale(DPR, DPR);
-
-      rowHeader.width = ROW_HEADER_WIDTH * DPR;
-      rowHeader.height = (height - COL_HEADER_HEIGHT) * DPR;
-      rowHeader.style.left = '0px';
-      rowHeader.style.top = COL_HEADER_HEIGHT + 'px';
-      rowHeader.style.width = ROW_HEADER_WIDTH + 'px';
-      rowHeader.style.height = (height - COL_HEADER_HEIGHT) + 'px';
-      rowCtx.setTransform(1, 0, 0, 1, 0, 0);
-      rowCtx.scale(DPR, DPR);
-
-      colHeader.width = (width - ROW_HEADER_WIDTH) * DPR;
-      colHeader.height = COL_HEADER_HEIGHT * DPR;
-      colHeader.style.left = ROW_HEADER_WIDTH + 'px';
-      colHeader.style.top = '0px';
-      colHeader.style.width = (width - ROW_HEADER_WIDTH) + 'px';
-      colHeader.style.height = COL_HEADER_HEIGHT + 'px';
-      colCtx.setTransform(1, 0, 0, 1, 0, 0);
-      colCtx.scale(DPR, DPR);
-
-      drawGrid();
-      drawRowHeader();
-      drawColHeader();
-    }
-
-    function drawGrid() {
-      gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
-      for (let c = 0; c <= NUM_COLS; c++) {
-        const x = c * COL_WIDTH;
-        gridCtx.beginPath();
-        gridCtx.moveTo(x, 0);
-        gridCtx.lineTo(x, ROW_HEIGHT * NUM_ROWS);
-        gridCtx.strokeStyle = '#ccc';
-        gridCtx.lineWidth = 1;
-        gridCtx.stroke();
-      }
-      for (let r = 0; r <= NUM_ROWS; r++) {
-        const y = r * ROW_HEIGHT;
-        gridCtx.beginPath();
-        gridCtx.moveTo(0, y);
-        gridCtx.lineTo(COL_WIDTH * NUM_COLS, y);
-        gridCtx.strokeStyle = '#ccc';
-        gridCtx.lineWidth = 1;
-        gridCtx.stroke();
-      }
-    }
-
-    function drawRowHeader() {
-      rowCtx.clearRect(0, 0, rowHeader.width, rowHeader.height);
-      for (let r = 0; r < NUM_ROWS; r++) {
-        const y = r * ROW_HEIGHT;
-        rowCtx.fillStyle = '#eee';
-        rowCtx.fillRect(0, y, ROW_HEADER_WIDTH, ROW_HEIGHT);
-        rowCtx.strokeStyle = '#ccc';
-        rowCtx.strokeRect(0, y, ROW_HEADER_WIDTH, ROW_HEIGHT);
-        rowCtx.fillStyle = '#000';
-        rowCtx.fillText(r + 1, 10, y + ROW_HEIGHT / 1.6);
-      }
-    }
-
-    function drawColHeader() {
-      colCtx.clearRect(0, 0, colHeader.width, colHeader.height);
-      for (let c = 0; c < NUM_COLS; c++) {
-        const x = c * COL_WIDTH;
-        colCtx.fillStyle = '#eee';
-        colCtx.fillRect(x, 0, COL_WIDTH, COL_HEADER_HEIGHT);
-        colCtx.strokeStyle = '#ccc';
-        colCtx.strokeRect(x, 0, COL_WIDTH, COL_HEADER_HEIGHT);
-        colCtx.fillStyle = '#000';
-        colCtx.fillText(String.fromCharCode(65 + c), x + 10, COL_HEADER_HEIGHT / 1.6);
-      }
-    }
-
-    window.addEventListener('resize', resizeCanvases);
-    resizeCanvases();
   </script>
 </body>
+
 </html>

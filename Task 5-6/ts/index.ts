@@ -306,7 +306,7 @@ ham_dd_content.forEach((element) => {
   console.log(element.sub_items);
   if (element.sub_items.length > 0) {
     dd_el_ih = dd_el_ih.concat(
-      `<img  src='/icons/arrow-down.svg' alt="" /></div>`
+      `<img  src='./icons/arrow-down.svg' alt="" /></div>`
     );
     element.sub_items.forEach((si) => {
       dd_el_ih = dd_el_ih.concat(`
@@ -329,7 +329,7 @@ function closeInDD(ham_selected) {
   });
   let prev_ih: HTMLElement = document.querySelector("#dd_el_" + ham_selected)!;
   let prev_ig_img = prev_ih.querySelector("img")!;
-  prev_ig_img.setAttribute("src", "/icons/arrow-down.svg");
+  prev_ig_img.setAttribute("src", "./icons/arrow-down.svg");
   // prev_ig_img = prev_ih.querySelector("img");
   // console.log(img);
   prev_ig_img.setAttribute("height", "24px");
@@ -360,7 +360,7 @@ function openItemInDD(item) {
     (si as HTMLElement).style.display = "block";
   });
   let arr: HTMLElement = ih.querySelector("img")!;
-  arr.setAttribute("src", "/icons/arrow-up (1).png");
+  arr.setAttribute("src", "./icons/arrow-up (1).png");
   arr.setAttribute("height", "13px");
   arr.style.padding = "5px";
 

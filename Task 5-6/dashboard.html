@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quantum Dashboard</title>
     <!-- <link rel="stylesheet" href="index.css" />-->
-    <link rel="stylesheet" href="scss_index.css" />
-    <link rel="stylesheet" href="scss_dashboard.css" />
+    <link rel="stylesheet" href="./scss_index.css" />
+    <link rel="stylesheet" href="./scss_dashboard.css" />
   </head>
 
   <body>
@@ -358,7 +358,7 @@
           //   console.log(element.sub_items);
           //   if (element.sub_items.length > 0) {
           //     dd_el_ih = dd_el_ih.concat(
-          //       `<img  src='/icons/arrow-down.svg' alt="" /></div>`
+          //       `<img  src='./icons/arrow-down.svg' alt="" /></div>`
           //     );
           //     element.sub_items.forEach((si) => {
           //       dd_el_ih = dd_el_ih.concat(`
@@ -381,7 +381,7 @@
           //   });
           //   prev_ih = document.querySelector("#dd_el_" + ham_selected);
           //   prev_ig_img = prev_ih.querySelector("img");
-          //   prev_ig_img.setAttribute("src", "/icons/arrow-down.svg");
+          //   prev_ig_img.setAttribute("src", "./icons/arrow-down.svg");
           //   // prev_ig_img = prev_ih.querySelector("img");
           //   // console.log(img);
           //   prev_ig_img.setAttribute("height", "24px");
@@ -412,7 +412,7 @@
           //     si.style.display = "block";
           //   });
           //   arr = ih.querySelector("img");
-          //   arr.setAttribute("src", "/icons/arrow-up (1).png");
+          //   arr.setAttribute("src", "./icons/arrow-up (1).png");
           //   arr.setAttribute("height", "13px");
           //   arr.style.padding = "5px";
 
@@ -463,7 +463,9 @@
       </div>
       <div id="section_card_grid"></div>
 
-      <footer>
+      
+    </div>
+<footer>
         <div class="above_moreinfo">
           <div class="about pd-5">About</div>
           <div class="contact_us pd-5">Contact Us</div>
@@ -477,8 +479,6 @@
           <div class="copyright">All rights reserved.</div>
         </div>
       </footer>
-    </div>
-
     <script src="ts/index.js"></script>
   </body>
 </html>
