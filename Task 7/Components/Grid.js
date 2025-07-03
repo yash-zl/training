@@ -10,13 +10,15 @@ export class Grid {
      * @param {*} rowHeaderCtx 
      * @param {*} colHeaderCtx 
      */
-    constructor(gridCanvas, rowHeaderCanvas, colHeaderCanvas, gtx, rtx, ctx, window, wih, wiw) {
-        console.log("hellow");
-        this.gridCanvas = grid;
+    constructor(outer_container, canvas_wrapper, gridCanvas, rowHeaderCanvas, colHeaderCanvas, gtx, rtx, ctx, window, wih, wiw) {
+        // // // // console.log("hellow");
+        this.gridCanvas = gridCanvas;
         this.rowHeaderCanvas = rowHeaderCanvas;
         this.colHeaderCanvas = colHeaderCanvas;
+        this.outer_container = outer_container;
+        this.canvas_wrapper = canvas_wrapper;
 
-        console.log(gridCanvas, rowHeaderCanvas, colHeaderCanvas);
+        // // // // console.log(gridCanvas, rowHeaderCanvas, colHeaderCanvas);
 
         this.gtx = gtx;
         this.rtx = rtx;
@@ -31,24 +33,87 @@ export class Grid {
         this.chh = 30;
         this.rhw = 60;
 
-        var cols_to_make = Math.ceil(this.wiw * 1.5 / this.dcw);
-        var rows_to_make = Math.ceil(this.wih * 1.6 / this.drh);
+        this.prevTop = 0;
+        this.prevLeft = 0;
+
+        this.stRow = 0;
+        this.stOffRow = 0;
+
+        this.stCol = 0;
+        this.stOffCol = 0;
+
+        this.top = 0;
+        this.left = 0;
+
+        // this.enCol = Math.ceil((this.wiw - this.rhw) / this.dcw);
+        // this.enRow = Math.ceil((this.wih - this.chh) / this.drh);
+
+        this.canvas_wrapper.style.height = `${this.wih * 1.5}px`;
+        this.canvas_wrapper.style.width = `${this.wiw * 1.5}px`;
+
+        // this.rangeSelected = false;
+        this.rowSelected = false;
+        this.colSelected = false;
+        this.selectedCellRange = [{ row: -1, col: -1 }, { row: -1, col: -1 }];
+        // // // // // console.log("cols_to_make", cols_to_make, "rows_to_make", rows_to_make);
 
         this.cols = [];
         this.rows = [];
+        this.prefixRows = [];
+        let prs = 0;
+        let pcs = 0;
+        this.prefixCols = [];
 
-        for (let i = 0; i < rows_to_make; i++) {
-            this.rows.push(new Row(i + 1));
+        for (let i = 0; i * this.drh < this.wih * 1.5; i++) {
+            this.rows.push(new Row(i));
+            this.prefixRows.push(prs);
+            prs += this.drh;
         }
 
-        for (let i = 0; i < cols_to_make; i++) {
-            this.cols.push(new Column(i + 1));
+        for (let i = 0; i * this.dcw < this.wiw * 1.5; i++) {
+            this.cols.push(new Column(i));
+            this.prefixCols.push(pcs);
+            pcs += this.dcw;
         }
 
-        // console.log(render);
+
+
+        this.rowsTotalHeight = prs;
+        this.colsTotalWidth = pcs;
+
+        // // // console.log(pcs);
+
+
+        this.outer_container.height = "100%";
+        this.outer_container.width = "100%";
+
+        this.rows_fit_in_view = Math.ceil((this.wih - this.chh) / this.drh);
+        this.cols_fit_in_view = Math.ceil((this.wiw - this.rhw) / this.dcw);
+
+        // // // // // console.log(this.cols);
         this.window = window;
 
-        this.render(this.window);
+        this.stRow = 0;
+        // this.colHeaderInitStyle();
+        this.visibleRows = [];
+        this.visibleCols = [];
+
+        this.calculateVisibleRows();
+        this.calculateVisibleCols();
+
+        let y = 0;
+        let i = 0;
+
+        this.topxSelection = 0;
+        this.topySelection = 0;
+        this.bottomxSelection = 0;
+        this.bottomySelection = 0;
+
+        // this.rowHeaderInitStyle();
+        requestAnimationFrame(() => this.render());;
+
+
+
     }
 
     drawRowHeaders() {
@@ -59,7 +124,7 @@ export class Grid {
         this.rtx.textBaseline = 'middle';
         this.rtx.font = '12px sans-serif';
         this.rtx.textAlign = "right";
-        for (let r = 0; r <= NUM_ROWS; r++) {
+        for (let r = stRow; r <= NUM_ROWS; r++) {
             const y = Math.floor(r * default_row_height) + 0.5;
             this.rtx.beginPath();
             this.rtx.moveTo(0, y);
@@ -71,47 +136,91 @@ export class Grid {
         }
     }
 
-    rowHeaderRender() {
-        console.log(this.rhw, this.DPR);
-        this.rowHeaderCanvas.width = this.rhw * this.DPR;
-        this.rowHeaderCanvas.height = this.wih * this.DPR;
-        this.rowHeaderCanvas.style.left = '0px';
-        this.rowHeaderCanvas.style.top = this.chh + 'px';
-        this.rowHeaderCanvas.style.width = this.rhw + 'px';
-        this.rowHeaderCanvas.style.height = this.wih + 'px';
+    rowHeaderStyle() {
 
-        // Use DPR-scaled coordinate system
-        this.rtx.fillStyle = '#f0f0f0';
-        this.rtx.fillRect(0, 0, this.rhw, this.wih);
+
+        this.rowHeaderCanvas.width = this.rhw * this.DPR;
+        this.rowHeaderCanvas.height = this.rowsTotalHeight * this.DPR;
+        this.rowHeaderCanvas.style.top = `${this.top + this.chh}px`;
+        this.rowHeaderCanvas.style.left = `${this.left}px`;
+        this.rowHeaderCanvas.style.width = this.rhw + 'px';
+        this.rowHeaderCanvas.style.height = this.rowsTotalHeight + 'px';
+    }
+
+    rowHeaderRender() {
+        this.rowHeaderStyle();
+
+        // this.rtx = this.rowHeaderCanvas.getContext('2d');
         this.rtx.setTransform(this.DPR, 0, 0, this.DPR, 0, 0);
+        this.rtx.clearRect(0, 0, this.rowHeaderCanvas.width, this.rowHeaderCanvas.height);
+
+        this.rtx.fillStyle = '#f0f0f0';
+        this.rtx.fillRect(0, 0, this.rhw, this.rowsTotalHeight);
         this.rtx.lineWidth = 1;
 
-        let prefixSumRow = 0;
+        let y = -this.stOffRow;
+        const first = this.selectedCellRange[0];
+        const last = this.selectedCellRange[1];
 
-        for (let row of this.rows) {
-            const y = row.height;
-            prefixSumRow += y;
+        var sel = first.row;
 
-            // Draw horizontal grid line with pixel alignment
+        let isSelected = false;
+
+        for (let row of this.visibleRows) {
+            // console.log(row.index, "First:", first.row, "Last:", last.row);
+
+            if (first.row <= row.index && row.index <= last.row) {
+                isSelected = true;
+                // if (sel != last.row) sel++;
+
+            }
+
+
+
+            if (isSelected && !this.rowSelected) {
+                this.rtx.fillStyle = 'rgba(0, 200, 0, 0.10)'; // light green
+                this.rtx.fillRect(0, y, this.rhw, row.height);
+                this.rtx.fillStyle = '#616161';
+                this.rtx.beginPath();
+                this.rtx.lineWidth = 5;
+                this.rtx.moveTo(this.rhw, Math.floor(y) + 0.5);
+                this.rtx.lineTo(this.rhw, Math.floor(y) + row.height + 0.5);
+                this.rtx.strokeStyle = 'rgb(16,124,65)';
+                this.rtx.stroke();
+
+            } else if (isSelected && this.rowSelected) {
+                this.rtx.fillStyle = 'rgb(16,124,65)';
+                this.rtx.fillRect(0, y, this.rhw, row.height);
+                this.rtx.fillStyle = '#ffffff';
+            } else {
+                this.rtx.fillStyle = '#616161';
+
+            }
+
+            // Draw horizontal line
             this.rtx.beginPath();
-            this.rtx.moveTo(0, Math.floor(prefixSumRow) + 0.5);
-            this.rtx.lineTo(this.rhw, Math.floor(prefixSumRow) + 0.5);
-            this.rtx.strokeStyle = "#e0e0e0";
+            this.rtx.lineWidth = 1;
+            this.rtx.moveTo(0, Math.floor(y) + 0.5);
+            this.rtx.lineTo(this.rhw, Math.floor(y) + 0.5);
+            this.rtx.strokeStyle = '#e0e0e0';
             this.rtx.stroke();
 
             // Draw row number
-            this.rtx.fillStyle = '#616161';
             this.rtx.textBaseline = 'middle';
-            this.rtx.font = '14px sans-serif';
-            this.rtx.textAlign = "right";
+            this.rtx.font = '16px sans-serif';
+            this.rtx.textAlign = 'right';
+            this.rtx.fillText(row.index + 1, this.rhw - 5, y + row.height / 2);
 
-            const labelY = prefixSumRow - y + y / 2;
-            this.rtx.fillText(row.index, this.rhw - 5, labelY);
+            y += row.height;
+
+            isSelected = false;
         }
     }
 
+
     indexToColumnLabel(index) {
         let label = '';
+        index = index;
         while (index >= 0) {
             label = String.fromCharCode((index % 26) + 65) + label;
             index = Math.floor(index / 26) - 1;
@@ -119,41 +228,98 @@ export class Grid {
         return label;
     }
 
-    colHeaderRender() {
-        this.colHeaderCanvas.width = this.wiw * this.DPR;
+    colHeaderInitStyle() {
+        this.colHeaderCanvas.width = this.colsTotalWidth * this.DPR;
         this.colHeaderCanvas.height = this.chh * this.DPR;
-        this.colHeaderCanvas.style.left = this.rhw + 'px';
-        this.colHeaderCanvas.style.top = '0px';
-        this.colHeaderCanvas.style.width = this.wiw + 'px';
+        this.colHeaderCanvas.style.left = this.rhw + this.left + 'px';
+        this.colHeaderCanvas.style.top = this.top + 'px';
+        this.colHeaderCanvas.style.width = this.colsTotalWidth + 'px';
         this.colHeaderCanvas.style.height = this.chh + 'px';
+    }
+
+    colHeaderRender() {
+
+        // this.colHeaderCanvas.style.position = 'sticky';
+        this.colHeaderInitStyle();
+        // // // console.log(this.visibleCols)
+        this.ctx.setTransform(this.DPR, 0, 0, this.DPR, 0, 0);
+        this.ctx.clearRect(0, 0, this.colHeaderCanvas.width, this.colHeaderCanvas.height);
 
         this.ctx.fillStyle = '#f0f0f0';
-        this.ctx.fillRect(0, 0, this.wiw, this.chh);
-        this.ctx.setTransform(this.DPR, 0, 0, this.DPR, 0, 0);
-        this.ctx.lineWidth = 1 / this.DPR;
+        this.ctx.fillRect(0, 0, this.chh, this.colsTotalWidth);
+        this.ctx.lineWidth = 1;
 
-        let prefixSumCol = 0;
+        let x = -this.stOffCol;
+        let col = undefined;
+        const first = this.selectedCellRange[0];
+        const last = this.selectedCellRange[1];
 
-        for (let col of this.cols) {
-            const x = col.width;
-            prefixSumCol += x;
+        // console.log("First:", first, "Last:", last);
+        var sel = first.col;
 
-            // Draw vertical grid line
+        // // console.log(this.visibleCols[0].index, first.col, last.col);
+
+        let isSelected = false;
+        for (col of this.visibleCols) {
+            // // console.log("Col:", col.index, "First:", first., "Last:", last.col);
+            if (col.index >= first.col && col.index <= last.col) {
+                // console.log("true");
+                isSelected = true;
+                // if (sel != last.col) sel++;
+            }
+
+            if (isSelected && !this.colSelected) {
+                this.ctx.fillStyle = 'rgba(0, 200, 0, 0.10)'; // light green
+                this.ctx.fillRect(x, 0, col.width, this.chh);
+                this.ctx.fillStyle = '#616161';
+                this.ctx.beginPath();
+                this.ctx.lineWidth = 5;
+                this.ctx.moveTo(Math.floor(x) + 0.5, this.chh);
+                this.ctx.lineTo(Math.floor(x) + col.width + 0.5, this.chh);
+                this.ctx.strokeStyle = 'rgb(16,124,65)';
+                this.ctx.stroke();
+            } else if (isSelected && this.colSelected) {
+                this.ctx.fillStyle = 'rgb(16,124,65)';
+                this.ctx.fillRect(x, 0, col.width, this.chh);
+                this.ctx.fillStyle = '#ffffff';
+            } else {
+                this.ctx.fillStyle = '#616161';
+            }
+
+
+            this.ctx.lineWidth = 1;
+            // Draw horizontal line
             this.ctx.beginPath();
-            this.ctx.moveTo(Math.floor(prefixSumCol) + 0.5, 0);
-            this.ctx.lineTo(Math.floor(prefixSumCol) + 0.5, this.chh);
-            this.ctx.strokeStyle = "#e0e0e0";
+            this.ctx.moveTo(Math.floor(x) + 0.5, 0);
+            this.ctx.lineTo(Math.floor(x) + 0.5, this.chh);
+            this.ctx.strokeStyle = '#e0e0e0';
             this.ctx.stroke();
-
-            // Draw column letter
-            this.ctx.fillStyle = '#616161';
+            // Draw row number
+            // this.ctx.fillStyle = '#616161';
             this.ctx.textBaseline = 'middle';
-            this.ctx.font = '14px sans-serif';
-            this.ctx.textAlign = "center";
+            this.ctx.font = '16px sans-serif';
+            this.ctx.textAlign = 'right';
+            this.ctx.fillText(this.indexToColumnLabel(col.index), x + col.width / 2, this.chh / 2 + 5);
+            x += col.width;
 
-            const labelX = prefixSumCol - x / 2;
-            this.ctx.fillText(this.indexToColumnLabel(col.index), labelX, this.chh / 2);
+            isSelected = false;
+
         }
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(Math.floor(x) + 0.5, 0);
+        this.ctx.lineTo(Math.floor(x) + 0.5, this.chh);
+        this.ctx.strokeStyle = '#e0e0e0';
+        this.ctx.stroke();
+
+        // Draw row number
+        this.ctx.fillStyle = '#616161';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.font = '16px sans-serif';
+        this.ctx.textAlign = 'right';
+        this.ctx.fillText(this.indexToColumnLabel(col.index), x + col.width / 2, this.chh / 2 + 5);
+        x += col.width;
+
     }
 
 
@@ -161,33 +327,41 @@ export class Grid {
         const ctx = this.gridCtx;
         const DPR = this.DPR;
 
-        this.gridCanvas.width = this.wiw * DPR;
-        this.gridCanvas.height = this.wih * DPR;
-        this.gridCanvas.style.left = this.rhw + 'px';
-        this.gridCanvas.style.top = this.chh + 'px';
-        this.gridCanvas.style.width = this.wiw + 'px';
-        this.gridCanvas.style.height = this.wih + 'px';
+        this.gridCanvas.width = this.colsTotalWidth * DPR;
+        this.gridCanvas.height = this.rowsTotalHeight * DPR;
+        this.gridCanvas.style.left = this.rhw + this.left + 'px';
+        this.gridCanvas.style.top = this.chh + this.top + 'px';
+        this.gridCanvas.style.width = this.colsTotalWidth + 'px';
+        this.gridCanvas.style.height = this.rowsTotalHeight + 'px';
 
         this.gtx.setTransform(DPR, 0, 0, DPR, 0, 0);
-        this.gtx.clearRect(0, 0, this.wiw, this.wih);
+        this.gtx.clearRect(0, 0, this.colsTotalWidth, this.rowsTotalHeight);
         this.gtx.lineWidth = 1;
         this.gtx.strokeStyle = '#e0e0e0';
 
-        let y = 0;
-        for (let row of this.rows) {
+        let y = -this.stOffRow;
+        this.gtx.beginPath();
+        this.gtx.moveTo(0, Math.floor(y) + 0.5);
+        this.gtx.lineTo(this.colsTotalWidth, Math.floor(y) + 0.5);
+        this.gtx.stroke();
+        for (let row of this.visibleRows.slice(1)) {
             y += row.height;
             this.gtx.beginPath();
             this.gtx.moveTo(0, Math.floor(y) + 0.5);
-            this.gtx.lineTo(this.wiw, Math.floor(y) + 0.5);
+            this.gtx.lineTo(this.colsTotalWidth, Math.floor(y) + 0.5);
             this.gtx.stroke();
         }
 
-        let x = 0;
-        for (let col of this.cols) {
+        let x = -this.stOffCol;
+        this.gtx.beginPath();
+        this.gtx.moveTo(Math.floor(x) + 0.5, 0);
+        this.gtx.lineTo(Math.floor(x) + 0.5, this.rowsTotalHeight);
+        this.gtx.stroke();
+        for (let col of this.visibleCols) {
             x += col.width;
             this.gtx.beginPath();
             this.gtx.moveTo(Math.floor(x) + 0.5, 0);
-            this.gtx.lineTo(Math.floor(x) + 0.5, this.wih);
+            this.gtx.lineTo(Math.floor(x) + 0.5, this.rowsTotalHeight);
             this.gtx.stroke();
         }
     }
@@ -195,16 +369,18 @@ export class Grid {
 
 
 
-    render(window) {
-        console.log(window);
-        this.DPR = window.devicePixelRatio || 1;
+    render() {
+        // // // // // console.log(window);
+        this.DPR = this.window.devicePixelRatio || 1;
 
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
+        // // console.log(this.selectedCellRange);
+        this.calculateVisibleCols();
+        this.calculateVisibleRows();
+        this.adjustSelectedRange();
         this.rowHeaderRender();
         this.colHeaderRender();
         this.drawGrid();
+        this.gridSelection();
 
 
         // //draw cols
@@ -218,8 +394,374 @@ export class Grid {
         // }
 
         //draw rows
+        // // // console.log(this.cols)
+
+
+    }
+
+    calculateVisibleRows() {
+        // Calculate the visible rows based on the current scroll position
+        this.stRow = this.binarySearch(this.top, this.prefixRows, 0, this.prefixRows.length - 1);
+        this.stOffRow = this.top - this.prefixRows[this.stRow];
+        this.visibleRows = [];
+        let y = this.stOffRow;
+        let rowIdx = this.stRow;
+
+        while (y < this.wih) {
+            if (rowIdx >= this.rows.length) {
+                this.rows.push(new Row(rowIdx));
+                this.prefixRows.push(this.prefixRows[this.prefixRows.length - 1] + this.drh);
+                if (this.colSelected) {
+                    this.selectedCellRange[1].row = rowIdx;
+                    // // console.log("changing selected range", this.selectedCellRange);
+                }
+
+            }
+
+            this.visibleRows.push(this.rows[rowIdx]);
+            y += this.rows[rowIdx].height;
+            rowIdx++;
+        }
+
+        this.rowsTotalHeight = y;
+
+    }
+
+    calculateVisibleCols() {
+
+        // Calculate the visible columns based on the current scroll position   
+        this.stCol = this.binarySearch(this.left, this.prefixCols, 0, this.prefixCols.length - 1);
+        this.stOffCol = this.left - this.prefixCols[this.stCol];
+        this.visibleCols = [];
+        let x = this.stOffCol;
+        let colIdx = this.stCol;
+
+        while (x < this.wiw) {
+            if (colIdx >= this.cols.length) {
+                this.cols.push(new Column(colIdx));
+                this.prefixCols.push(this.prefixCols[this.prefixCols.length - 1] + this.dcw);
+                if (this.rowSelected) {
+                    this.selectedCellRange[1].col = colIdx;
+                    // // console.log("changing selected range", this.selectedCellRange);
+                }
+            }
+
+            this.visibleCols.push(this.cols[colIdx]);
+            x += this.cols[colIdx].width;
+            colIdx++;
+        }
+
+        // // console.log("All Columns:", this.cols);
+
+        // if (colIdx >= this.cols.length) {
+        //     this.cols.push(new Column(colIdx));
+        //     this.prefixCols.push(this.prefixCols[this.prefixCols.length - 1] + this.dcw);
+        // }
+
+        // this.visibleCols.push(this.cols[colIdx]);
+        // x += this.cols[colIdx].width;
+        // colIdx++;
+
+        this.colsTotalWidth = x;
+
+        // // // console.log(this.indexToColumnLabel(this.visibleCols[0].index), this.indexToColumnLabel(this.visibleCols[this.visibleCols.length - 1].index));
+    }
+
+    handleScroll(scrollLeft, scrollTop) {
+        if (scrollTop < this.top) {
+            this.canvas_wrapper.height = `${this.top + this.wih}px`;
+        }
+        if (scrollLeft < this.left) {
+            this.canvas_wrapper.width = `${this.left + this.wiw}px`;
+        }
+
+        this.top = scrollTop;
+        this.left = scrollLeft;
 
 
 
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => this.render());;
+        })
+    }
+
+    binarySearch(value, arr, low = 0, high = arr.length - 1) {
+        let ogLow = low;
+        // // // // console.log("called for", value, arr, low, high, ogLow);
+        while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            if (mid == 0 || (arr[mid] >= value && (mid == 0 || arr[mid - 1] < value) && (mid == arr.length - 1 || arr[mid + 1] > value))) {
+                return mid == 0 ? mid : mid - 1;
+            } else if (arr[mid] > value) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+
+        return ogLow;
+    }
+
+    binarySearchEndRow(scrollBottom, prefixRows) {
+        let low = 0, high = prefixRows.length - 1, ans = prefixRows.length - 1;
+        while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            if (prefixRows[mid] <= scrollBottom) {
+                ans = mid;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return ans;
+    }
+
+
+    handleResize(window, newHeight, newWidth) {
+        // // // // console.log("resize", newHeight, newWidth);
+        this.wih = newHeight;
+        this.wiw = newWidth;
+        this.window = window;
+
+        this.canvas_wrapper.style.height = `${this.wih * 1.5}px`;
+        this.canvas_wrapper.style.width = `${this.wiw * 1.5}px`;
+
+        this.adjustHeights();
+
+        this.rows_fit_in_view = Math.ceil((this.wih - this.chh) / this.drh);
+        this.cols_fit_in_view = Math.ceil((this.wiw - this.rhw) / this.dcw);
+
+
+        requestAnimationFrame(() => {
+        });
+    }
+
+    adjustHeights() {
+        // Adjust the heights of the row headers and grid canvas based on the new dimensions
+        this.rowHeaderCanvas.style.height = `${this.rowsTotalHeight}px`;
+        this.gridCanvas.style.height = `${this.rowsTotalHeight}px`;
+        this.gridCanvas.style.width = `${this.colsTotalWidth}px`;
+        this.colHeaderCanvas.style.width = `${this.colsTotalWidth}px`;
+    }
+
+    selectCell(pointerX, pointerY) {
+        // Adjust for header sizes
+        const x = pointerX - this.rhw;
+        const y = pointerY - this.chh;
+
+        // Ignore clicks in header areas
+        if (x < 0 || y < 0) return;
+
+        // Find column and row index using binary search
+        const colIdx = this.binarySearch(x + this.left, this.prefixCols, 0, this.prefixCols.length - 1);
+        const rowIdx = this.binarySearch(y + this.top, this.prefixRows, 0, this.prefixRows.length - 1);
+
+        this.selectedCell = { row: rowIdx, col: colIdx };
+
+        // Redraw to show selection
+        requestAnimationFrame(() => this.render());;
+    }
+
+    handleMouseDown(event) {
+        // // // // console.log("Mouse down", event);
+        const pointerX = event.clientX - this.outer_container.getBoundingClientRect().left;
+        const pointerY = event.clientY - this.outer_container.getBoundingClientRect().top;
+        this.mousedown = true;
+        // startMouseDown(this.mousedown);
+        this.rowSelected = false;
+        this.colSelected = false;
+        // // // // console.log("Pointer X:", pointerX, "Pointer Y:", pointerY);
+        this.selectedCellRange = [];
+        this.selectedCellRange[0] = this.findCellAt(pointerX, pointerY);
+        this.selectedCellRange[1] = this.selectedCellRange[0];
+        requestAnimationFrame(() => this.render());;
+    }
+
+    // startMouseDown(eventType) {
+    //     // // // console.log("Mouse down event started", eventType);  
+
+
+    // }
+
+    handleMouseUp(event) {
+        // // // // console.log("Mouse down", event);
+        const pointerX = event.clientX - this.outer_container.getBoundingClientRect().left;
+        const pointerY = event.clientY - this.outer_container.getBoundingClientRect().top;
+        this.mousedown = false;
+        this.rowSelected = false;
+        this.colSelected = false;
+        this.selectedCellRange[1] = this.findCellAt(pointerX, pointerY);
+
+        if (this.selectedCellRange[0] == this.selectedCellRange[1]) {
+            this.rangeSelected = false;
+        } else {
+            this.rangeSelected = true;
+        }
+
+
+
+        // // // console.log("Selected Cell Range:", this.selectedCellRange);
+        requestAnimationFrame(() => this.render());;
+        // this.gridSelection();
+        // // // // console.log("Pointer X:", pointerX, "Pointer Y:", pointerY);
+
+        // this.selectCell(pointerX, pointerY);
+    }
+
+    adjustSelectedRange() {
+        if (this.selectedCellRange[0].row >= this.selectedCellRange[1].row) {
+            let temp = this.selectedCellRange[0].row;
+            this.selectedCellRange[0].row = this.selectedCellRange[1].row;
+            this.selectedCellRange[1].row = temp;
+        }
+
+        if (this.selectedCellRange[0].col >= this.selectedCellRange[1].col) {
+            let temp = this.selectedCellRange[0].col;
+            this.selectedCellRange[0].col = this.selectedCellRange[1].col;
+            this.selectedCellRange[1].col = temp;
+        }
+
+        if (this.rowSelected) {
+            // this.selectedCellRange[0].col = 0;
+            this.selectedCellRange[1].col = this.cols.length - 1;
+            // console.log("Row selected, adjusting range:", this.selectedCellRange);
+        }
+
+        if (this.colSelected) {
+            // this.selectedCellRange[0].row = 0;
+            this.selectedCellRange[1].row = this.rows.length - 1;
+            // console.log("Col selected, adjusting range:", this.selectedCellRange);
+        }
+
+        console.log("Adjusted Selected Cell Range:", this.selectedCellRange);
+    }
+
+    gridSelection() {
+        this.topxSelection = this.prefixCols[this.selectedCellRange[0].col] - this.left;
+        this.topySelection = this.prefixRows[this.selectedCellRange[0].row] - this.top;
+        this.widthSelection = this.rowSelected ? this.left + this.wiw : this.prefixCols[this.selectedCellRange[1].col + 1] - this.left - this.topxSelection;
+        this.heightSelection = this.colSelected ? this.top + this.wih : this.prefixRows[this.selectedCellRange[1].row + 1] - this.top - this.topySelection;
+
+
+
+
+        // console.log("Selection Rect:", this.topxSelection, this.topySelection, this.widthSelection, this.heightSelection);
+
+        this.gtx.fillStyle = 'rgba(0, 200, 0, 0.10)'; // light green
+        this.gtx.fillRect(this.topxSelection, this.topySelection, this.widthSelection, this.heightSelection);
+        this.gtx.strokeStyle = 'rgb(16,124,65)';
+        this.gtx.lineWidth = 3;
+        this.gtx.beginPath();
+        this.gtx.moveTo(this.topxSelection, this.topySelection);
+        this.gtx.lineTo(this.topxSelection + this.widthSelection, this.topySelection);
+        this.gtx.lineTo(this.topxSelection + this.widthSelection, this.topySelection + this.heightSelection);
+        this.gtx.lineTo(this.topxSelection, this.topySelection + this.heightSelection);
+        this.gtx.lineTo(this.topxSelection, this.topySelection);
+        this.gtx.stroke();
+        // this.gtx.fillStyle = '#616161';
+        this.gtx.closePath();
+    }
+
+
+
+    findCellAt(pointerX, pointerY) {
+        // Adjust for header sizes
+        const x = pointerX - this.rhw;
+        const y = pointerY - this.chh;
+
+        // Ignore clicks in header areas
+        if (x < 0 || y < 0) return null;
+
+        // Find column and row index using binary search
+        const colIdx = this.binarySearch(x + this.left, this.prefixCols, 0, this.prefixCols.length - 1);
+        const rowIdx = this.binarySearch(y + this.top, this.prefixRows, 0, this.prefixRows.length - 1);
+
+        // // // console.log("Cell found at:", rowIdx, colIdx);
+
+        return { row: rowIdx, col: colIdx };
+    }
+
+    handleRowHeaderMouseDown(event) {
+        // // // // console.log("Row header mouse down", event);
+
+
+        const pointerY = event.clientY + this.top;
+        // console.log("Pointer Y:", pointerY);
+        const pointerX = event.clientX - this.outer_container.getBoundingClientRect().left;
+        this.mousedown = true;
+        this.rowSelected = true;
+        this.colSelected = false;
+        // // // console.log("Pointer X:", pointerX, "Pointer Y:", pointerY);
+
+
+        // // // // console.log("Pointer X:", pointerX, "Pointer Y:", pointerY);
+        this.selectedCellRange = [];
+        this.selectedCellRange[0] = { row: this.binarySearch(pointerY, this.prefixRows, 0, this.prefixRows.length - 1) - 1, col: 0 };
+        this.selectedCellRange[1] = { row: this.selectedCellRange[0].row, col: this.cols.length - 1 };
+        // console.log("Selected Row Range:", this.selectedCellRange);
+        requestAnimationFrame(() => this.render());;
+    }
+
+    handleRowHeaderMouseUp(event) {
+        // // // // console.log("Row header mouse up", event);
+        const pointerY = event.clientY + this.top;
+        const pointerX = event.clientX;
+        this.mousedown = false;
+
+        // console.log(this.cols.length);
+
+        this.selectedCellRange[1] = { row: this.binarySearch(pointerY, this.prefixRows, 0, this.prefixRows.length - 1) - 1, col: this.cols.length - 1 };
+
+
+
+        // console.log("Selected Row Range:", this.selectedCellRange);
+        requestAnimationFrame(() => this.render());;
+    }
+
+    handleColHeaderMouseDown(event) {
+        // // // // console.log("Col header mouse down", event);
+        const pointerX = event.clientX + this.left;
+        this.mousedown = true;
+        this.rowSelected = false;
+        this.colSelected = true;
+        // // // console.log("Pointer X:", pointerX, "Pointer Y:", pointerY);
+
+        this.selectedCellRange = [];
+        this.selectedCellRange[0] = { row: 0, col: this.binarySearch(pointerX, this.prefixCols, 0, this.prefixCols.length - 1) - 1 };
+        this.selectedCellRange[1] = { row: this.rows.length - 1, col: this.selectedCellRange[0].col };
+        // console.log("Selected Col Range:", this.selectedCellRange);
+        requestAnimationFrame(() => this.render());;
+    }
+
+    handleColHeaderMouseUp(event) {
+        // // // // console.log("Col header mouse up", event);;
+        const pointerX = event.clientX + this.left;
+        this.mousedown = false;
+
+        this.selectedCellRange[1] = { row: this.rows.length - 1, col: this.binarySearch(pointerX, this.prefixCols, 0, this.prefixCols.length - 1) - 1 };
+
+        // console.log("Selected Col Range:", this.selectedCellRange);
+        requestAnimationFrame(() => this.render());;
+    }
+
+    handleMouseMove(event) {
+        if (this.mousedown) {
+            // // // // console.log("Mouse move", event);
+            const pointerX = event.clientX - this.outer_container.getBoundingClientRect().left;
+            const pointerY = event.clientY - this.outer_container.getBoundingClientRect().top;
+            // // // console.log("Pointer X:", pointerX, "Pointer Y:", pointerY);
+
+            this.selectedCellRange[1] = this.findCellAt(pointerX, pointerY);
+
+
+            console.log(this.selectedCellRange);
+
+            requestAnimationFrame(() => this.render());
+            this.printAllStates();
+        }
+    }
+
+    printAllStates() {
+        console.log(this);
     }
 }
