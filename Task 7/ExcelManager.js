@@ -35,11 +35,15 @@ window.addEventListener("mouseup", (e) => {
 
 window.addEventListener("mousemove", (e) => {
     gridObj.handleMouseMove(e);
-});
+}); 
 
 rowHeaderCanvas.addEventListener("mousedown", (e) => {
     gridObj.handleRowHeaderMouseDown(e);
 });
+
+rowHeaderCanvas.addEventListener("mousemove", (e)=>{
+    gridObj.handleRowHeaderMouseMove(e);
+})
 
 // rowHeaderCanvas.addEventListener("mousemove", ()=> gridObj.handle)
 
@@ -51,6 +55,10 @@ rowHeaderCanvas.addEventListener("mouseup", (e) => {
 colHeaderCanvas.addEventListener("mousedown", (e) => {
     gridObj.handleColHeaderMouseDown(e);
 });
+
+colHeaderCanvas.addEventListener('mouseover', (e)=>{
+    gridObj.handleColHeaderMouseMove(e);
+})
 
 colHeaderCanvas.addEventListener("mouseup", (e) => {
     gridObj.handleColHeaderMouseUp(e);
