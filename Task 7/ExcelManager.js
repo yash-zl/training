@@ -26,7 +26,6 @@ window.onresize = (e) => {
 gridCanvas.addEventListener("mousedown", (e) => {
     gridObj.handleMouseDown(e);
 });
-
 window.addEventListener("mouseup", (e) => {
     console.log('winup');
 
