@@ -1,9 +1,13 @@
 export class Cell{
-    constructor(value=''){
-        this.value = value;
+    constructor(content=''){
+        this.content = content;
     }
 
-    edit(val){
-        this.val = val;
+    edit(newContent){
+        this.content = newContent;
+    }
+
+    getContent(){
+        return this.content;
     }
 }
