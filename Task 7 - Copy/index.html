@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Excel</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+      cursor: none;
+    }
+
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: scroll;
+    }
+
+    canvas {
+      position: absolute;
+      display: block;
+    }
+
+    #grid {
+      z-index: 0;
+    }
+
+    #row-header,
+    #col-header {
+      background: #f3f3f3;
+      z-index: 2;
+      /* position: sticky; */
+    }
+
+    #corner {
+      background: #e0e0e0;
+      z-index: 3;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    input {
+      position: sticky;
+    }
+
+    #grid {
+      z-index: 0;
+    }
+
+    #row-header,
+    #col-header {
+      z-index: 100;
+    }
+
+    #customCursor {
+      position: fixed;
+      pointer-events: none;
+      width: 12px;
+      height: 6px;
+      /* background: url('big-cursor.png') no-repeat center center; */
+      background-size: contain;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="customCursor"></div>
+  <div id="outerContainer" style="overflow: auto; width: 100vw; height: 100vh;">
+    <div id="canvasWrapper" style="position: relative">
+      <canvas id="gridCanvas">...</canvas>
+      <canvas id="rowHeaderCanvas">...</canvas>
+      <canvas id="colHeaderCanvas">...</canvas>
+    </div>
+  </div>
+
+
+  <script type="module" src="Excel.js"></script>
+  <script>
+    const cursor = document.getElementById("customCursor");
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.left = e.pageX + "px";
+      cursor.style.top = e.pageY + "px";
+    });
+  </script>
+
+
+  </script>
+</body>
+
+</html>
