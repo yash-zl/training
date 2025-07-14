@@ -1,13 +1,11 @@
 export class Edit {
-    constructor(dataController) {
-        this.dataController = dataController;
-        this.input = this.dataController.getInput();
-        this.cell = this.dataController.getEditCell();
-        this.input.value = this.dataController.getDataHandler().getAt(this.cell.row, this.cell.col);
+    constructor(dataHandler, cellInfo) {
+        this.dataHandler = dataHandler;
+        this.cellInfo = cellInfo;        
     }
 
     pointerDown(e) {
-
+        
     }
 
     pointerMove(e) { }

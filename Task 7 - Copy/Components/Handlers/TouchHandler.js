@@ -13,9 +13,10 @@ export class TouchHandler {
     pointerMove(e) {
         if (!this.currentHandler) {
             for (let action of this.arrActions) {
+                // ////console.log(this.action);
                 if (action.hitTest(e)) {
                     // this.currentHandler.setCursor();
-                    //console.log(action);
+                    //////console.log(action);
                     action.setCursor();
                     break;
                 }
@@ -29,6 +30,7 @@ export class TouchHandler {
         if(!this.currentHandler){
             for(let action of this.arrActions){
                 if(action.hitTest(e)){
+                    console.log(action);
                     this.currentHandler = action;
                     break;
                 }
@@ -38,9 +40,10 @@ export class TouchHandler {
     }
 
     pointerUp(e) {
-        this.currentHandler.pointerUp(e);
+        const action = this.currentHandler.pointerUp(e);
         this.currentHandler = null;
-        // this.touchHandler = null;
+        ////console.log("returning", action);
+        return action;
     }
 
     registerHandler(handler) {

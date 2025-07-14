@@ -115,7 +115,7 @@
 //         this.colHeaderInitStyle(colHeaderCanvas);
 
 //         let ctx = this.dataController.getCtx();
-//         // // // // // // //////////////////console.log(this.dataController.getVisibleCols())
+//         // // // // // // //////////////////////console.log(this.dataController.getVisibleCols())
 //         ctx.setTransform(this.dataController.getDPR(), 0, 0, this.dataController.getDPR(), 0, 0);
 //         ctx.clearRect(0, 0, colHeaderCanvas.width, colHeaderCanvas.height);
 
@@ -129,17 +129,17 @@
 //         const first = adjustedCellSelection[0];
 //         const last = adjustedCellSelection[1];
 
-//         // // // // //////////////////console.log("First:", first, "Last:", last);
+//         // // // // //////////////////////console.log("First:", first, "Last:", last);
 //         var sel = first.col;
 //         // let ctx = this.dataController.getCtx();
 
-//         // // // // // //////////////////console.log(this.dataController.getVisibleCols()[0].index, first.col, last.col);
+//         // // // // // //////////////////////console.log(this.dataController.getVisibleCols()[0].index, first.col, last.col);
 
 //         let isSelected = false;
 //         for (col of this.dataController.getVisibleCols()) {
-//             // // // // // //////////////////console.log("Col:", col.index, "First:", first., "Last:", last.col);
+//             // // // // // //////////////////////console.log("Col:", col.index, "First:", first., "Last:", last.col);
 //             if ((col.index >= first.col && col.index <= last.col)) {
-//                 // // // // //////////////////console.log("true");
+//                 // // // // //////////////////////console.log("true");
 //                 isSelected = true;
 //                 // if (sel != last.col) sel++;
 //             }
@@ -255,10 +255,10 @@
 //     drawData() {
 //         let visibleRows = this.dataController.getVisibleRows();
 //         for (let row of visibleRows) {
-//             //////////////console.log('suuuu', row.index);
+//             //////////////////console.log('suuuu', row.index);
 //             const rowData = this.dataController.getDataHandler().getRowData(row.index);
-//             //////////////console.log(rowData, "for ", row.index)
-//             if (rowData == null) { //////////////console.log('coninute'); 
+//             //////////////////console.log(rowData, "for ", row.index)
+//             if (rowData == null) { //////////////////console.log('coninute'); 
 //                 continue;
 //             }
 
@@ -268,21 +268,21 @@
 //                 gtx.font = '14px sans-serif';
 //                 gtx.textAlign = 'left';
 //                 let cellData = rowData.get(col.index);
-//                 // //////////////console.log()
+//                 // //////////////////console.log()
 //                 gtx.fillText(cellData ? cellData.getContent() : '', this.dataController.getPrefixCols()[col.index] - this.dataController.getLeft() + 4, this.dataController.getPrefixRows()[row.index] - this.dataController.getTop() + row.height / 2, col.width);
 //             }
 //         }
 //     }
 
 //     render() {
-//         // // // // // // // // //////////////////console.log(window);
+//         // // // // // // // // //////////////////////console.log(window);
 //         // this.dataController.setDPR(this.dataController) = this.dataController.getWindow().devicePixelRatio || 1;
 
-//         // // // //////////////////console.log(this.dataController.selectedCellRange[0].row, this.dataController.selectedCellRange[0].col, this.dataController.selectedCellRange[1].row, this.dataController.selectedCellRange[1].col);
+//         // // // //////////////////////console.log(this.dataController.selectedCellRange[0].row, this.dataController.selectedCellRange[0].col, this.dataController.selectedCellRange[1].row, this.dataController.selectedCellRange[1].col);
 //         this.dataController.calculateVisibleCols();
 //         this.dataController.calculateVisibleRows();
 
-//         // //////////////////console.log(this.dataController.getVisibleCols(), this.dataController.visibleRows);
+//         // //////////////////////console.log(this.dataController.getVisibleCols(), this.dataController.visibleRows);
 
 //         // this.dataController.getAdjustedSelectedRange();
 //         this.drawGrid();
@@ -303,7 +303,7 @@
 //         // }
 
 //         //draw rows
-//         // // // // // // //////////////////console.log(this.dataController.cols)
+//         // // // // // // //////////////////////console.log(this.dataController.cols)
 
 
 //     }
@@ -456,7 +456,7 @@ export class RenderHandler {
             const isSelected = col.index >= first.col && col.index <= last.col;
 
             ctx.beginPath();
-            ctx.moveTo(Math.floor(x) + 0.5, 0);
+            ctx.moveTo(Math.floor(x) + 0.5, 10);
             ctx.lineTo(Math.floor(x) + 0.5, this.dataController.getChh());
             ctx.strokeStyle = '#e0e0e0';
             ctx.stroke();
@@ -538,7 +538,7 @@ export class RenderHandler {
     }
 
     handleScroll(scrollLeft, scrollTop) {
-        //console.log('scroll',scrollLeft, scrollTop);
+        //////console.log('scroll',scrollLeft, scrollTop);
         this.dataController.setScroll(true);
         this.dataController.setTop(scrollTop);
         this.dataController.setLeft(scrollLeft);
@@ -573,18 +573,18 @@ export class RenderHandler {
         let y = this.dataController.getPrefixRows()[adjustedCellSelection[0].row] - this.dataController.getTop();
         let h = this.dataController.getPrefixRows()[adjustedCellSelection[1].row + 1] - this.dataController.getTop();
         let w = this.dataController.getPrefixCols()[adjustedCellSelection[1].col + 1] - this.dataController.getLeft();
-
+        //console.log(adjustedCellSelection);
         const topxSelection = x;
         const topySelection = y;
 
 
-        console.log('selection', x, y, h, w);
-        // //////console.log(this.dataController.getActionType());
+        // ////console.log('selection', x, y, h, w);
+        // //////////console.log(this.dataController.getActionType());
         const heightSelection = this.dataController.getActionType() == 'col-select' ? this.dataController.getWih() : h - y;
         const widthSelection = this.dataController.getActionType() == 'row-select' ? this.dataController.getWiw() : w - x;
 
         // heightSelection += 
-        // adjustedCellSelection[0].row==-1?()=>{}://console.log(adjustedCellSelection, widthSelection);
+        // adjustedCellSelection[0].row==-1?()=>{}://////console.log(adjustedCellSelection, widthSelection);
 
         const gtx = this.dataController.getGtx();
         gtx.fillStyle = 'rgba(0, 200, 0, 0.10)';
@@ -627,7 +627,7 @@ export class RenderHandler {
             this.dataController.getPrefixRows()[r] < this.dataController.getTop() ||
             this.dataController.getPrefixCols()[c] < this.dataController.getLeft()
         ) {
-            ////////////console.log(this.dataController.getInput());
+            ////////////////console.log(this.dataController.getInput());
             return null;
         }
         this.dataController.setInputValue(this.dataController.getDataHandler().getAt(r, c));
@@ -657,10 +657,10 @@ export class RenderHandler {
         let top = this.dataController.getTop();
         let gtx = this.dataController.getGtx();
         for (let row of visibleRows) {
-            //console.log('suuuu', row.index);
-            //console.log(rowData, "for ", row.index)
+            //////console.log('suuuu', row.index);
+            //////console.log(rowData, "for ", row.index)
             const rowData = this.dataController.getDataHandler().getRowData(row.index);
-            if (rowData == null) { //console.log('coninute'); 
+            if (rowData == null) { //////console.log('coninute'); 
                 continue;
             }
 
@@ -670,9 +670,54 @@ export class RenderHandler {
                 gtx.font = '14px sans-serif';
                 gtx.textAlign = 'left';
                 let cellData = rowData.get(col.index);
-                // //console.log()
+                // //////console.log()
                 gtx.fillText(cellData ? cellData.getContent() : '', prefixCols[col.index] - left + 4, prefixRows[row.index] - top + row.height / 2, col.width);
             }
+        }
+    }
+
+    onHeaderHover() {
+        let onRowIdx = this.dataController.getOnRowIdx();
+        let onColIdx = this.dataController.getOnColIdx();
+        if (onRowIdx != -1) {
+            let start = this.dataController.getEndOfRow(onRowIdx) - this.dataController.getTop();
+            let end = this.dataController.getEndOfRow(onRowIdx + 1) - this.dataController.getTop();
+
+            let rtx = this.dataController.getRtx();
+            // console.log('s   tart-end', start, end);
+            rtx.beginPath();
+            rtx.arc(10, start, 3, 0, 2 * Math.PI);
+            rtx.lineWidth = 1;
+            rtx.strokeStyle = 'rgb(16,124,65)';
+            // rtx.
+            rtx.stroke();
+
+            rtx.beginPath();
+            rtx.arc(10, end, 3, 0, 2 * Math.PI);
+            rtx.lineWidth = 1;
+            rtx.strokeStyle = 'rgb(16,124,65)';
+            // rtx.
+            rtx.stroke();
+
+        } else if (onColIdx != -1) {
+            let start = this.dataController.getEndOfCol(onColIdx) - this.dataController.getLeft();
+            let end = this.dataController.getEndOfCol(onColIdx + 1) - this.dataController.getLeft();
+
+            let ctx = this.dataController.getCtx();
+            console.log('start-end', start, end);
+            ctx.beginPath();
+            ctx.arc(start, 10, 3, 0, 2 * Math.PI);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgb(16,124,65)';
+            // ctx.
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(end, 10, 3, 0, 2 * Math.PI);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgb(16,124,65)';
+            // ctx.
+            ctx.stroke();
         }
     }
 
@@ -682,8 +727,9 @@ export class RenderHandler {
         this.drawGrid();
         this.rowHeaderRender();
         this.colHeaderRender();
-        this.gridSelection?.();
-        this.editCellInput?.();
-        this.drawData?.();
+        this.gridSelection();
+        this.editCellInput();
+        this.drawData();
+        this.onHeaderHover();
     }
 }
