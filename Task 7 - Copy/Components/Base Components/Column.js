@@ -1,6 +1,6 @@
 export class Column{
-    constructor(index){
+    constructor(index, width = 90){
         this.index = index;
-        this.width = 90;
+        this.width = width;
     }
 }

@@ -20,7 +20,7 @@ export class AddColDummy {
     }
 
     undo(){
-        console.log('dynn')
+        ////console.log('dynn')
         this.dataController.removeColAt(this.colIdx);
     }
 

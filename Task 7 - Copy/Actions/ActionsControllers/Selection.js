@@ -8,24 +8,30 @@ export class RowSelection {
         let selectedCellRange = [];
         selectedCellRange[0] = { row: this.dataController.getRow(pointerY), col: 0 };
         selectedCellRange[1] = { row: selectedCellRange[0].row, col: this.dataController.getCols().length - 1 };
-        ////console.log(selectedCellRange);
+        ////////console.log(selectedCellRange);
         // this.dataController.
-        this.dataController.setEditCell(selectedCellRange[0]);
+        this.dummy = this.dataController.setEditCell(selectedCellRange[0]);
 
         this.dataController.setSelectedCellRange(selectedCellRange);
         this.dataController.setActionType('row-select');
-
+        this.dataController.setRowSelected(true);
+        this.dataController.setColSelected(false);
         // this.dummy = new Edit(selectedCellRange);
 
     }
 
     pointerMove(e) {
         let pointerY = e.clientY;
-
         let selectedCellRange = this.dataController.getSelectedCellRange();
         selectedCellRange[1] = { row: this.dataController.getRow(pointerY), col: this.dataController.getCols().length - 1 };
 
-        // this.dataController.setOnRow()
+        console.log(pointerY, this.dataController.getWih());
+        if (pointerY > this.dataController.getWih() - 20) {
+            this.dataController.setAutoScroll(true);
+            this.dataController.setAutoScrollDirection('row');
+            return null;
+        }
+        this.dataController.setAutoScroll(false);
     }
 
     pointerUp(e) {
@@ -33,12 +39,13 @@ export class RowSelection {
 
         let selectedCellRange = this.dataController.getSelectedCellRange();
         selectedCellRange[1] = { row: this.dataController.getRow(pointerY), col: this.dataController.getCols().length - 1 };
-        // return this.dummy;
+        return this.dummy;
     }
 
     hitTest(e) {
+        //console.log(e.clientY <= this.dataController.getWih() - 30)
         if (e.clientX >= 0 && e.clientX <= this.dataController.getRhw() && e.clientY >= this.dataController.getChh() && e.clientY <= this.dataController.getWih()) {
-            // //console.log('rowOver',);
+            // //////console.log('rowOver',);
             this.dataController.setOnRow(this.dataController.getRow(e.clientY));
             return true;
         }
@@ -62,6 +69,8 @@ export class ColSelection {
         this.dummy = this.dataController.setEditCell(selectedCellRange[0]);
         this.dataController.setSelectedCellRange(selectedCellRange);
         this.dataController.setActionType('col-select');
+        this.dataController.setColSelected(true);
+        this.dataController.setRowSelected(false);
 
     }
 
@@ -71,6 +80,13 @@ export class ColSelection {
 
         selectedCellRange[1] = { row: this.dataController.getRows().length - 1, col: this.dataController.getCol(pointerX) };
         this.dataController.setSelectedCellRange(selectedCellRange);
+
+        if (pointerX > this.dataController.getWiw() - 20) {
+            this.dataController.setAutoScroll(true);
+            this.dataController.setAutoScrollDirection('col');
+            return null;
+        }
+        this.dataController.setAutoScroll(false);
     }
 
     pointerUp(e) {
@@ -79,8 +95,8 @@ export class ColSelection {
 
         selectedCellRange[1] = { row: this.dataController.getRows().length - 1, col: this.dataController.getCol(pointerX) };
         this.dataController.setSelectedCellRange(selectedCellRange);
-        // return this.dummy;
-        //////console.log(selectedCellRange);
+        return this.dummy;
+        //////////console.log(selectedCellRange);
     }
 
     hitTest(e) {
@@ -106,14 +122,17 @@ export class RangeSelection {
 
         this.dataController.editCell = { row: -1, cell: -1 };
 
-        ////console.log('poionts',pointerY + this.dataController.getTop() - this.dataController.getChh(), this.dataController.getPrefixRows()[40]);
+        ////////console.log('poionts',pointerY + this.dataController.getTop() - this.dataController.getChh(), this.dataController.getPrefixRows()[40]);
         let selectedCellRange = [];
         selectedCellRange[0] = { row: this.dataController.getRow(pointerY), col: this.dataController.getCol(pointerX) };
         selectedCellRange[1] = selectedCellRange[0];
-        ////console.log(selectedCellRange);
+        ////////console.log(selectedCellRange);
         this.dummy = this.dataController.setEditCell(selectedCellRange[0]);
         this.dataController.setSelectedCellRange(selectedCellRange);
         this.dataController.setActionType('select');
+        this.dataController.setRowSelected(false);
+        this.dataController.setColSelected(false);
+
 
     }
 
@@ -123,6 +142,17 @@ export class RangeSelection {
         let selectedCellRange = this.dataController.getSelectedCellRange();
 
         selectedCellRange[1] = { row: this.dataController.getRow(pointerY), col: this.dataController.getCol(pointerX) };
+
+        if (pointerX > this.dataController.getWiw() - 20) {
+            this.dataController.setAutoScroll(true);
+            this.dataController.setAutoScrollDirection('col');
+            return null;
+        }else if(pointerY > this.dataController.getWih() - 20){
+            this.dataController.setAutoScroll(true);
+            this.dataController.setAutoScrollDirection('row');
+            return null;
+        }
+        this.dataController.setAutoScroll(false);
     }
 
     pointerUp(e) {
@@ -136,7 +166,7 @@ export class RangeSelection {
     }
 
     hitTest(e) {
-        if (e.clientX >= this.dataController.getRhw() && e.clientY >= this.dataController.getChh()) {
+        if (e.clientX >= this.dataController.getRhw() && e.clientX < this.dataController.getWiw() - 13 && e.clientY < this.dataController.getWih() - 20 && e.clientY >= this.dataController.getChh()) {
             this.dataController.setOnRow(-1);
             return true;
         }

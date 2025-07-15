@@ -12,7 +12,7 @@ export class EditDummy{
     }
 
     undo(){
-        // ////console.log(this.dataController.getDataHandler());
+        // ////////console.log(this.dataController.getDataHandler());
         this.dataHandler.addAt(this.rowIdx, this.colIdx, this.initialValue);
     }
 

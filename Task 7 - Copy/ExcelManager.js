@@ -10,16 +10,16 @@ var canvasWrapper = document.getElementById('canvas-wrapper');
 const gridObj = new Grid(outer_container, canvasWrapper, gridCanvas, rowHeaderCanvas, colHeaderCanvas, gridCanvas.getContext('2d'), rowHeaderCanvas.getContext("2d"), colHeaderCanvas.getContext("2d"), window, window.innerHeight, window.innerWidth);
 outer_container.addEventListener('scroll', (e) => {
     // e.preventDefault();
-    // ////console.log("-----------");
+    // ////////console.log("-----------");
     const scrollLeft = outer_container.scrollLeft;
     const scrollTop = outer_container.scrollTop;
-    // ////console.log(outer_container.scrollHeight, outer_container.clientHeight, outer_container.scrollWidth, scrollLeft, scrollTop);
+    // ////////console.log(outer_container.scrollHeight, outer_container.clientHeight, outer_container.scrollWidth, scrollLeft, scrollTop);
 
     gridObj.handleScroll(scrollLeft, scrollTop);
 });
 
 window.onresize = (e) => {
-    // ////console.log("Window resized", e);
+    // ////////console.log("Window resized", e);
     gridObj.handleResize(window, window.innerHeight, window.innerWidth);
 };
 
@@ -27,7 +27,7 @@ gridCanvas.addEventListener("mousedown", (e) => {
     gridObj.handleMouseDown(e);
 });
 window.addEventListener("mouseup", (e) => {
-    // ////console.log('winup');
+    // ////////console.log('winup');
 
     gridObj.handleMouseUp(e);
 });
@@ -47,7 +47,7 @@ rowHeaderCanvas.addEventListener("mousemove", (e) => {
 // rowHeaderCanvas.addEventListener("mousemove", ()=> gridObj.handle)
 
 rowHeaderCanvas.addEventListener("mouseup", (e) => {
-    // ////console.log('rowheade');
+    // ////////console.log('rowheade');
     gridObj.handleRowHeaderMouseUp(e);
 });
 
@@ -66,5 +66,5 @@ colHeaderCanvas.addEventListener("mouseup", (e) => {
 
 
 
-// ////console.log(data);
-////console.log(gridObj);
+// ////////console.log(data);
+////////console.log(gridObj);

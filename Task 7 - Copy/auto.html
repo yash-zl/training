@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Scrolling Example</title>
+    <style>
+        /* Optional styles for demonstration */
+        body {
+            height: 2000px;
+            /* Create enough content to scroll through */
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Content to scroll through -->
+    <div style="padding: 20px;">
+        <h1>Welcome to Auto-Scrolling Example</h1>
+        <br>
+        &nbsp On page load, the scrolling of the page will be enabled. <br>
+        <!-- Add more content here -->
+    </div>
+
+    <!-- Scroll to Top Indicator -->
+    <div class="scroll-indicator">
+        <a href="#" id="scrollToTop">Scroll to Top</a>
+    </div>
+
+    <script>
+        // JavaScript for auto-scrolling using requestAnimationFrame
+        let scrollPosition = 0;
+        const scrollSpeed = 2; // Adjust scroll speed as needed
+        let animationId; // Store the animation frame ID
+
+        function autoScroll() {
+            scrollPosition += scrollSpeed;
+            window.scrollTo(0, scrollPosition);
+
+            if (scrollPosition < document.body.scrollHeight) {
+                animationId = requestAnimationFrame(autoScroll);
+            }
+        }
+
+        animationId = requestAnimationFrame(autoScroll);
+
+        // Scroll to top when clicking the "Scroll to Top" link
+        document.getElementById('scrollToTop').addEventListener('click', function (e) {
+            e.preventDefault();
+            cancelAnimationFrame(animationId); // Stop the auto-scrolling
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Smoothly scroll to the top
+        });
+    </script>
+</body>
+
+</html>
