@@ -77,7 +77,7 @@
 
 <body>
 
-  <div id="customCursor"></div>
+  <!-- <div id="customCursor"></div> -->
   <div id="outerContainer" style="overflow: auto; width: 100vw; height: 100vh;">
     <div id="canvasWrapper" style="position: relative">
       <canvas id="gridCanvas">...</canvas>
@@ -85,17 +85,12 @@
       <canvas id="colHeaderCanvas">...</canvas>
     </div>
   </div>
+  <script type="module">
+    import { Excel } from './Excel.js';
 
-
-  <script type="module" src="Excel.js"></script>
-  <script>
-    const cursor = document.getElementById("customCursor");
-    document.addEventListener("mousemove", (e) => {
-      cursor.style.left = e.pageX + "px";
-      cursor.style.top = e.pageY + "px";
-    });
+    let excel = new Excel(document);
   </script>
-
+    
 
   </script>
 </body>

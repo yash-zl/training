@@ -7,13 +7,12 @@ import { DataFunctionsDummy } from '../../Actions/ActionsDummy/DataFunctionsDumm
 // import { DataPoints } from '../'
 
 export class DataController {
-    constructor(outerContainer, canvasWrapper, gridCanvas, rowCanvas, colCanvas, window, cursor) {
+    constructor(outerContainer, canvasWrapper, gridCanvas, rowCanvas, colCanvas, window) {
         this._outerContainer = outerContainer;
         this._canvasWrapper = canvasWrapper;
         this._gridCanvas = gridCanvas;
         this._rowCanvas = rowCanvas;
         this._colCanvas = colCanvas;
-        this._cursor = cursor;
         this._gtx = gridCanvas.getContext('2d');
         this._rtx = rowHeaderCanvas.getContext('2d');
         this._ctx = colHeaderCanvas.getContext('2d');
@@ -141,7 +140,7 @@ export class DataController {
     setAutoScrollDirection(val){
         this.autoScrollDirection = val;
     }
-    
+
     computeAndPushDataPoints(dataFunction) {
         if (this.getSelectedCellRange()[0].row != -1) {
             let dataFunctionsObj = new DataFunctions(this.getAdjustedSelectedRange(), this.getDataHandler());
