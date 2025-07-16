@@ -1,70 +1,60 @@
-import { Grid } from './Grid.js';
-
-var gridCanvas = document.getElementById('grid');
-var rowHeaderCanvas = document.getElementById("row-header");
-var colHeaderCanvas = document.getElementById("col-header");
-var outer_container = document.getElementById('outer-container');
-var canvasWrapper = document.getElementById('canvas-wrapper');
+import { Excel } from './Excel.js';
+import { DataController } from './Components/Data/DataController.js';
 
 
-const gridObj = new Grid(outer_container, canvasWrapper, gridCanvas, rowHeaderCanvas, colHeaderCanvas, gridCanvas.getContext('2d'), rowHeaderCanvas.getContext("2d"), colHeaderCanvas.getContext("2d"), window, window.innerHeight, window.innerWidth);
-outer_container.addEventListener('scroll', (e) => {
-    // e.preventDefault();
-    // ////////console.log("-----------");
-    const scrollLeft = outer_container.scrollLeft;
-    const scrollTop = outer_container.scrollTop;
-    // ////////console.log(outer_container.scrollHeight, outer_container.clientHeight, outer_container.scrollWidth, scrollLeft, scrollTop);
+export class ExcelManager {
+    constructor(document) {
+        this.document = document;
+        this.excelDataControllers = [];
+        this.body = document.body;
+        this.sheets = 0;
+        this.excel = new Excel(this.document, null);
+        this.init();
+    }
 
-    gridObj.handleScroll(scrollLeft, scrollTop);
-});
+    init() {
+        // ////console.log(this.document);
+        this.sheets++;
+        let dataController = new DataController(this.document.getElementById('outerContainer'), this.document.getElementById('canvasWrapper'), this.document.getElementById('gridCanvas'), this.document.getElementById('rowHeaderCanvas'), this.document.getElementById('colHeaderCanvas'), window, this.sheets, this.document.getElementById('bottomBar'));
+        this.excelDataControllers.push(dataController);
 
-window.onresize = (e) => {
-    // ////////console.log("Window resized", e);
-    gridObj.handleResize(window, window.innerHeight, window.innerWidth);
-};
+        this.activate(1);
+        // excel.active(true);
+    }
 
-gridCanvas.addEventListener("mousedown", (e) => {
-    gridObj.handleMouseDown(e);
-});
-window.addEventListener("mouseup", (e) => {
-    // ////////console.log('winup');
+    add() {
+        this.sheets++;
+        let dataController = new DataController(this.document.getElementById('outerContainer'), this.document.getElementById('canvasWrapper'), this.document.getElementById('gridCanvas'), this.document.getElementById('rowHeaderCanvas'), this.document.getElementById('colHeaderCanvas'), window, this.sheets, this.document.getElementById('bottomBar'));
+        this.excelDataControllers.push(dataController);
+        let allInputs = this.document.getElementsByClassName('cellEdit');
+        //console.log(allInputs);
+        for (let input of allInputs) {
+            if (parseInt(input.getAttribute('id')) != this.sheets) {
+                input.style.display = "none";
+            } else {
+                input.style.display = "inline-block";
+            }
+        }
+        this.excel.changeDataController(dataController);
+        ////console.log('adding', dataController);
+    }
 
-    gridObj.handleMouseUp(e);
-});
+    activate(val) {
+        if (val > this.sheets) return null;
+        ////console.log('activating ', this.excelDataControllers[val-1]);
+        let allInputs = this.document.getElementsByClassName('cellEdit');
+        //console.log(allInputs);
+        for (let input of allInputs) {
+            if (parseInt(input.getAttribute('id')) != val) {
+                input.style.display = "none";
+            } else {
+                input.style.display = "inline-block";
+            }
+        }
+        this.excel.changeDataController(this.excelDataControllers[val - 1]);
 
-window.addEventListener("mousemove", (e) => {
-    gridObj.handleMouseMove(e);
-});
-
-rowHeaderCanvas.addEventListener("mousedown", (e) => {
-    gridObj.handleRowHeaderMouseDown(e);
-});
-
-rowHeaderCanvas.addEventListener("mousemove", (e) => {
-    gridObj.handleRowHeaderMouseMove(e);
-})
-
-// rowHeaderCanvas.addEventListener("mousemove", ()=> gridObj.handle)
-
-rowHeaderCanvas.addEventListener("mouseup", (e) => {
-    // ////////console.log('rowheade');
-    gridObj.handleRowHeaderMouseUp(e);
-});
-
-colHeaderCanvas.addEventListener("mousedown", (e) => {
-    gridObj.handleColHeaderMouseDown(e);
-});
-
-colHeaderCanvas.addEventListener('mouseover', (e) => {
-    gridObj.handleColHeaderMouseMove(e);
-})
-
-colHeaderCanvas.addEventListener("mouseup", (e) => {
-    gridObj.handleColHeaderMouseUp(e);
-});
+    }
 
 
 
-
-// ////////console.log(data);
-////////console.log(gridObj);
+}

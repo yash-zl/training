@@ -11,14 +11,14 @@ export class ColResize {
 
         this.col = this.dataController.exactBinarySearchX(e.clientX);
 
-        ////////console.log(this.col);
+        ////////////console.log(this.col);
         let initialEnd = this.dataController.getEndOfCol(this.col);
         this.dummy = new ColResizeDummy(this.dataController, this.col, initialEnd);
     }
 
     pointerMove(e) {
         let newEnd = e.pageX + this.dataController.getLeft() - this.dataController.getRhw();
-        ////////console.log(newEnd);
+        ////////////console.log(newEnd);
         this.dataController.adjustColWidths(newEnd, this.col);
     }
 
@@ -28,7 +28,7 @@ export class ColResize {
         // this.dataController.adjustColWidths(this.col, this.colHeightDiff);
         this.col = -1;
 
-        //////console.log(this.dataController.getSelectedCellRange());
+        //////////console.log(this.dataController.getSelectedCellRange());
         return this.dummy;
     }
 
@@ -49,6 +49,10 @@ export class ColResize {
     }
 
     undo(e) { }
+
+    changeDataController(dataController) {
+        this.dataController = dataController;
+    }
 }
 
 export class RowResize {
@@ -60,14 +64,14 @@ export class RowResize {
     pointerDown(e) {
         this.dataController.setActionType('row-resize');
         this.row = this.dataController.exactBinarySearchY(e.clientY);
-        // ////////console.log(this.row);
+        // ////////////console.log(this.row);
         this.initialEnd = this.dataController.getEndOfRow(this.row);
         this.dummy = new RowResizeDummy(this.dataController, this.row, this.initialEnd)
     }
 
     pointerMove(e) {
 
-        // //////////console.log("resizing " + this.row, e.pageY + " whose prev end was at " + this.dataController.getPrefixRows());
+        // //////////////console.log("resizing " + this.row, e.pageY + " whose prev end was at " + this.dataController.getPrefixRows());
         let newEnd = e.pageY - this.dataController.getChh() + this.dataController.getTop();
 
         this.dataController.adjustRowHeights(newEnd, this.row);
@@ -80,7 +84,7 @@ export class RowResize {
         this.dummy.setFinalEnd(this.finalEnd);
 
         this.row = -1;
-        // ////////console.log(this.dummy);
+        // ////////////console.log(this.dummy);
         return this.dummy;
     }
 
@@ -97,5 +101,9 @@ export class RowResize {
 
     setCursor() {
         this.dataController.setCursor('row-resize');
+    }
+
+    changeDataController(dataController) {
+        this.dataController = dataController;
     }
 }

@@ -35,7 +35,7 @@ export class RenderHandler {
         const first = adjustedCellRange[0];
         const last = adjustedCellRange[1];
 
-        //console.log('y',y);
+        //////console.log('y',y);
 
         const visibleRows = this.dataController.getVisibleRows();
 
@@ -115,7 +115,7 @@ export class RenderHandler {
         // const first = adjustedCellRange[0];
         // const last = adjustedCellRange[1];
 
-        //console.log('x',x);
+        //////console.log('x',x);
 
         for (const col of visibleCols) {
             const isSelected = !colResize && col.index >= first.col && col.index <= last.col;
@@ -203,14 +203,14 @@ export class RenderHandler {
     }
 
     handleScroll(scrollLeft, scrollTop) {
-        ////////console.log('scroll',scrollLeft, scrollTop);
+        //console.log('scroll', scrollLeft, scrollTop);
         this.dataController.setScroll(true);
         this.dataController.setTop(scrollTop);
         this.dataController.setLeft(scrollLeft);
 
         this.adjustHeights();
         requestAnimationFrame(() => this.render());
-        //console.log(this.dataController.getVisibleCols());
+        //////console.log(this.dataController.getVisibleCols());
         this.dataController.setScroll(false);
     }
 
@@ -239,20 +239,20 @@ export class RenderHandler {
         let y = this.dataController.getPrefixRows()[adjustedCellSelection[0].row] - this.dataController.getTop();
         let h = this.dataController.getPrefixRows()[adjustedCellSelection[1].row + 1] - this.dataController.getTop();
         let w = this.dataController.getPrefixCols()[adjustedCellSelection[1].col + 1] - this.dataController.getLeft();
-        // //console.log(adjustedCellSelection);
+        // //////console.log(adjustedCellSelection);
         const topxSelection = x;
         const topySelection = y;
 
         let rowSelected = this.dataController.getRowSelected();
         let colSelected = this.dataController.getColSelected();
 
-        // //////console.log('selection', x, y, h, w);
-        // ////////////console.log(this.dataController.getActionType());
+        // //////////console.log('selection', x, y, h, w);
+        // ////////////////console.log(this.dataController.getActionType());
         const heightSelection = colSelected ? Number.MAX_SAFE_INTEGER : h - y;
         const widthSelection = rowSelected ? Number.MAX_SAFE_INTEGER : w - x;
 
         // heightSelection += 
-        // adjustedCellSelection[0].row==-1?()=>{}:////////console.log(adjustedCellSelection, widthSelection);
+        // adjustedCellSelection[0].row==-1?()=>{}:////////////console.log(adjustedCellSelection, widthSelection);
 
         const gtx = this.dataController.getGtx();
         gtx.fillStyle = 'rgba(0, 200, 0, 0.10)';
@@ -294,7 +294,7 @@ export class RenderHandler {
         let endCol = this.dataController.getPrefixCols()[c + 1];
         let top = this.dataController.getTop();
         let left = this.dataController.getLeft();
-        // console.log('PRT', prefixRow - top , this.dataController.getChh());
+        // ////console.log('PRT', prefixRow - top , this.dataController.getChh());
         if (
             r === -1 ||
             c === -1 ||
@@ -303,14 +303,16 @@ export class RenderHandler {
             endRow + this.dataController.getChh() >= this.dataController.getWih() + this.dataController.getTop() ||
             endCol + this.dataController.getRhw() >= this.dataController.getWiw() + this.dataController.getLeft()
         ) {
-            // console.log('RETURNING');
+            // ////console.log('RETURNING');
             return null;
         }
         this.dataController.setInputValue(this.dataController.getDataHandler().getAt(r, c));
         // this.dataController.getInput().value = this.dataController.getDataHandler().getAt(r, c);
         const input = this.dataController.getInput();
 
-        input.setAttribute("id", "cellEdit");
+        input.setAttribute("class", "cellEdit");
+        input.setAttribute("id", this.dataController.getId());
+
         input.style.position = "absolute";
         input.style.left = `${this.dataController.getPrefixCols()[c] + 2 + this.dataController.getRhw()}px`;
         input.style.top = `${this.dataController.getPrefixRows()[r] + 2 + this.dataController.getChh()}px`;
@@ -333,10 +335,10 @@ export class RenderHandler {
         let top = this.dataController.getTop();
         let gtx = this.dataController.getGtx();
         for (let row of visibleRows) {
-            ////////console.log('suuuu', row.index);
-            ////////console.log(rowData, "for ", row.index)
+            ////////////console.log('suuuu', row.index);
+            ////////////console.log(rowData, "for ", row.index)
             const rowData = this.dataController.getDataHandler().getRowData(row.index);
-            if (rowData == null) { ////////console.log('coninute'); 
+            if (rowData == null) { ////////////console.log('coninute'); 
                 continue;
             }
 
@@ -346,7 +348,7 @@ export class RenderHandler {
                 gtx.font = '14px sans-serif';
                 gtx.textAlign = 'left';
                 let cellData = rowData.get(col.index);
-                // ////////console.log()
+                // ////////////console.log()
                 gtx.fillText(cellData ? cellData.getContent() : '', prefixCols[col.index] - left + 4, prefixRows[row.index] - top + row.height / 2, col.width);
             }
         }
@@ -360,7 +362,7 @@ export class RenderHandler {
             let end = this.dataController.getEndOfRow(onRowIdx + 1) - this.dataController.getTop();
 
             let rtx = this.dataController.getRtx();
-            // //console.log('s   tart-end', start, end);
+            // //////console.log('s   tart-end', start, end);
             rtx.beginPath();
             rtx.arc(10, start, 3, 0, 2 * Math.PI);
             rtx.lineWidth = 1;
@@ -380,7 +382,7 @@ export class RenderHandler {
             let end = this.dataController.getEndOfCol(onColIdx + 1) - this.dataController.getLeft();
 
             let ctx = this.dataController.getCtx();
-            // //console.log('start-end', start, end);
+            // //////console.log('start-end', start, end);
             ctx.beginPath();
             ctx.arc(start, 10, 3, 0, 2 * Math.PI);
             ctx.lineWidth = 1;
@@ -403,11 +405,19 @@ export class RenderHandler {
             this.dataController.setAutoScroll(false);
             this.dataController.getOuterContainer().scrollBy(0, +20);
             return null;
-        }else{
+        } else {
             this.handleScroll(this.dataController.getLeft() + 20, this.dataController.getTop());
             this.dataController.setAutoScroll(false);
             this.dataController.getOuterContainer().scrollBy(+20, 0);
             return null;
+        }
+    }
+
+    bottomBarRender() {
+        let bottomBarData = this.dataController.getBottomBarData();
+        if (!bottomBarData) return null;
+        for (const [key, value] of bottomBarData) {
+            document.getElementById(key).innerText = key+": " + value;
         }
     }
 
@@ -424,5 +434,14 @@ export class RenderHandler {
         this.editCellInput();
         this.drawData();
         this.onHeaderHover();
+        this.bottomBarRender();
+    }
+
+    changeDataController(dataController) {
+        //console.log(this.dataController.getLeft(), ' to ', dataController.getLeft());
+        this.dataController = dataController;
+        // ////console.log(this.dataController.getLeft(), this.dataController.getTop());
+        this.handleScroll(dataController.getLeft(), dataController.getTop());
+        this.dataController.getOuterContainer().scrollTo(dataController.getLeft(), dataController.getTop());
     }
 }

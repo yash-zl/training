@@ -7,7 +7,9 @@ import { DataFunctionsDummy } from '../../Actions/ActionsDummy/DataFunctionsDumm
 // import { DataPoints } from '../'
 
 export class DataController {
-    constructor(outerContainer, canvasWrapper, gridCanvas, rowCanvas, colCanvas, window) {
+    constructor(outerContainer, canvasWrapper, gridCanvas, rowCanvas, colCanvas, window, id, bottomBar) {
+        console.log('dc',bottomBar);
+        this.id = id;
         this._outerContainer = outerContainer;
         this._canvasWrapper = canvasWrapper;
         this._gridCanvas = gridCanvas;
@@ -90,7 +92,7 @@ export class DataController {
 
         this._input = document.createElement('input');
 
-        this._dataHandler = new CellDataHandler();
+        this._dataHandler = new CellDataHandler(this.id);
 
         this._actionType = null;
         this.editDummy = null;
@@ -100,11 +102,12 @@ export class DataController {
         this.redoStack = [];
 
         this._input.addEventListener('input', (value) => {
+            //console.log('pre', this.getUndoStack())
             this._dataHandler.addAt(this._editCell.row, this._editCell.col, value.target.value);
             this.editDummy.setFinalValue(value.target.value);
             let popped = null;
             if (this.getUndoStackLength() > 0) popped = this.undoStack.pop();
-            ////////console.log(popped);
+            ////////////console.log(popped);
             if (popped && this.editDummy.idx != popped.idx) {
                 this.undoStackPush(popped);
                 this.undoStackPush(this.editDummy);
@@ -113,6 +116,8 @@ export class DataController {
             } else {
                 this.undoStackPush(this.editDummy);
             }
+
+            //console.log('post', this.getUndoStack());
         }
         );
 
@@ -123,21 +128,42 @@ export class DataController {
         this.onColIdx = -1;
         this.autoScroll = false;
         this.autoScrollDirection = 'row';
-
+        this.bottomBar = bottomBar;
+        this.bottomBarData = null;
         // this.MathFunctions = MathFunctions();
     }
-    getAutoScroll(){
+
+    getBottomBar(){
+        return this.bottomBar;
+    }
+
+    getBottomBarData(){
+        return this.bottomBarData;
+    }
+
+    setBottomBarData() {
+        let dataFunctionsObj = new DataFunctions(this.getAdjustedSelectedRange(), this.getDataHandler());
+        this.bottomBarData = dataFunctionsObj.getCumulativeData();
+
+        console.log(dataFunctionsObj, this.bottomBarData);
+    }
+
+    getId() {
+        return this.id;
+    }
+
+    getAutoScroll() {
         return this.autoScroll;
     }
-    setAutoScroll(val){
+    setAutoScroll(val) {
         this.autoScroll = val;
     }
 
-    getAutoScrollDirection(){
+    getAutoScrollDirection() {
         return this.autoScrollDirection;
     }
 
-    setAutoScrollDirection(val){
+    setAutoScrollDirection(val) {
         this.autoScrollDirection = val;
     }
 
@@ -151,7 +177,7 @@ export class DataController {
             this.undoStackPush(dataFunctionsDummy);
         }
 
-        ////console.log(this.getDataHandler().getData());
+        ////////console.log(this.getDataHandler().getData());
     }
 
     addColAt(idx) {
@@ -174,7 +200,7 @@ export class DataController {
             this._cols[i].index++;
         }
 
-        ////console.log(prevColWidth)
+        ////////console.log(prevColWidth)
 
         this._cols = [
             ...this._cols.slice(0, idx),
@@ -292,7 +318,7 @@ export class DataController {
     }
 
     undoStackPush(action, way = "first-timer") {
-        ////////console.log(way);
+        //console.log('pushing ', action, 'to ', this.undoStack);
         this.undoStack.push(action);
         if (way != 'post-redo') this.redoStack = [];
     }
@@ -304,7 +330,7 @@ export class DataController {
 
     redoStackPush(action) {
         this.redoStack.push(action);
-        ////////console.log('pushing to redoStack ', this.redoStack);
+        ////////////console.log('pushing to redoStack ', this.redoStack);
     }
 
     redoStackPop() {
@@ -490,13 +516,13 @@ export class DataController {
         if (type == 'row') value = value - this._chh + this._top;
         else value = value - this._rhw + this._left;
         let ogLow = low;
-        
-        ////console.log("called for", value, arr, low, high, ogLow);
+        ////console.log(this, this._left);
+        ////////console.log("called for", value, arr, low, high, ogLow);
         while (low <= high) {
             const mid = Math.floor((low + high) / 2);
-            // //////////console.log(mid, low, high, arr[mid], arr[mid+1]);
+            // //////////////console.log(mid, low, high, arr[mid], arr[mid+1]);
             if (arr[mid] <= value && arr[mid + 1] >= value) {
-                // //////////console.log('returning mid ' + mid);
+                // //////////////console.log('returning mid ' + mid);
                 return mid;
             } else if (arr[mid] > value) {
                 high = mid - 1;
@@ -504,9 +530,13 @@ export class DataController {
                 low = mid + 1;
             }
         }
-        // //////////console.log('returning ' + ogLow);
+        // //////////////console.log('returning ' + ogLow);
 
         return ogLow;
+    }
+
+    getUndoStack() {
+        return this.undoStack;
     }
 
     setEditCell(val) {
@@ -522,7 +552,7 @@ export class DataController {
     }
 
     getEndOfRow(rowIdx) {
-        ////console.log(rowIdx);
+        ////////console.log(rowIdx);
         return this._prefixRows[rowIdx];
     }
 
@@ -537,8 +567,12 @@ export class DataController {
     }
 
     getRowHeight(rowIdx) {
-        //////////console.log(this._rows[rowIdx - 1].height);
+        //////////////console.log(this._rows[rowIdx - 1].height);
         return this._rows[rowIdx - 1].height;
+    }
+
+    getDataHandler() {
+        return this._dataHandler;
     }
 
     getNewRowHeight(rowIdx, y) {
@@ -546,18 +580,18 @@ export class DataController {
         let newEnd = this._top + y - this._chh;
         let start = this._prefixRows[rowIdx - 1];
 
-        //////////console.log(newEnd- start);
-        // //////////////console.log(this._top + y - this._chh - this._prefixRows[rowIdx + 1]);
+        //////////////console.log(newEnd- start);
+        // //////////////////console.log(this._top + y - this._chh - this._prefixRows[rowIdx + 1]);
         return newEnd - start;
     }
 
     adjustRowHeights(newEnd, rowIdx) {
-        //////////////console.log(rowIdx);
+        //////////////////console.log(rowIdx);
         let newHeight = newEnd - this._prefixRows[rowIdx - 1];
         let diff = newHeight - this._rows[rowIdx - 1].height;
         this._rows[rowIdx - 1].height = newHeight;
         // this._rows[rowIdx - 1].height += diff;
-        //////////////console.log(this._rows[rowIdx - 1], this._prefixRows[rowIdx]);
+        //////////////////console.log(this._rows[rowIdx - 1], this._prefixRows[rowIdx]);
         for (let i = rowIdx; i < this._prefixRows.length; i++) {
             this._prefixRows[i] += diff;
         }
@@ -571,7 +605,7 @@ export class DataController {
 
     printRows(start, finish) {
         for (let i = start; i <= finish; i++) {
-            //////////console.log(this._prefixRows[i], this._rows[i]);
+            //////////////console.log(this._prefixRows[i], this._rows[i]);
         }
     }
 
@@ -587,7 +621,7 @@ export class DataController {
 
         while (low <= high) {
             let mid = Math.floor((low + high) / 2);
-            // // // //////////////////////////console.log(val, arr[mid]);
+            // // // //////////////////////////////console.log(val, arr[mid]);
             if (arr[mid] + 4 >= val && arr[mid] - 4 <= val) return mid;
             else if (arr[mid] > val) high = mid - 1;
             else low = mid + 1;
@@ -601,12 +635,12 @@ export class DataController {
         let low = 0;
         let high = arr.length - 1;
         let val = x + this._left - this._rhw;
-        //////////////////console.log(val, arr);
+        //////////////////////console.log(val, arr);
 
         while (low <= high) {
             let mid = Math.floor((low + high) / 2);
-            //////////////////console.log(mid);
-            // // // //////////////////////////console.log(val, arr[mid]);
+            //////////////////////console.log(mid);
+            // // // //////////////////////////////console.log(val, arr[mid]);
             if (arr[mid] + 4 >= val && arr[mid] - 4 <= val) return mid;
             else if (arr[mid] > val) high = mid - 1;
             else low = mid + 1;
@@ -628,15 +662,15 @@ export class DataController {
     adjustColWidths(newEnd, colIdx) {
         let diff = newEnd - this._prefixCols[colIdx];
 
-        ////////console.log('data', diff, colIdx, newEnd);
+        ////////////console.log('data', diff, colIdx, newEnd);
 
         this._cols[colIdx - 1].width += diff;
-        ////////console.log(this._prefixCols);
+        ////////////console.log(this._prefixCols);
         for (let i = colIdx; i < this._prefixCols.length; i++) {
             this._prefixCols[i] += diff;
         }
 
-        ////////console.log('done', this._cols[colIdx - 1], this._prefixCols);
+        ////////////console.log('done', this._cols[colIdx - 1], this._prefixCols);
     }
 
     setCursor(cursorType) {
@@ -661,14 +695,14 @@ export class DataController {
         this._stOffRow = this._top - this._prefixRows[this._stRow];
         this._visibleRows = [];
         let y = this._stOffRow;
-        // //////////////////////////console.log("Strow:", this.stRow);
+        // //////////////////////////////console.log("Strow:", this.stRow);
         let rowIdx = this._stRow;
         const dub = rowIdx;
 
         let colSelected = this.getColSelected();
-        // // //////////////////////////console.log("row: ", dub);
+        // // //////////////////////////////console.log("row: ", dub);
 
-        //////////////console.log(y, this._top);
+        //////////////////console.log(y, this._top);
 
         while (y <= this._wih * 2) {
             if (rowIdx >= this._rows.length) {
@@ -677,7 +711,7 @@ export class DataController {
                     this._prefixRows.push(this._prefixRows[this._prefixRows.length - 1] + this._drh);
                     if (colSelected) {
                         this._selectedCellRange[1].row = i;
-                        // // // // // //////////////////////////console.log("changing selected range",this._selectedCellRange);
+                        // // // // // //////////////////////////////console.log("changing selected range",this._selectedCellRange);
                     }
                 }
             }
@@ -686,16 +720,16 @@ export class DataController {
             y += this._rows[rowIdx].height;
             rowIdx++;
         }
-        // // //////////////////////////console.log("vis", this.visibleRows);
+        // // //////////////////////////////console.log("vis", this.visibleRows);
         this._rowsTotalHeight = y;
 
-        // ////console.log()
+        // ////////console.log()
 
     }
 
     calculateVisibleCols() {
         this._stCol = this.binarySearch(0, this._prefixCols, 0, this._prefixCols.length - 1);
-        ////console.log('stc',this._stCol);
+        ////////console.log('stc',this._stCol);
         this._stOffCol = this._left - this._prefixCols[this._stCol];
         this._visibleCols = [];
         let x = this._stOffCol;
@@ -708,9 +742,9 @@ export class DataController {
                     this._cols.push(new Column(i));
                     this._prefixCols.push(this._prefixCols[this._prefixCols.length - 1] + this._dcw);
                     if (rowSelected) {
-                        //////////////////////console.log("changing", colIdx);
+                        //////////////////////////console.log("changing", colIdx);
                         this._selectedCellRange[1].col = i;
-                        // // // // // //////////////////////////console.log("changing selected range",this._selectedCellRange);
+                        // // // // // //////////////////////////////console.log("changing selected range",this._selectedCellRange);
                     }
                 }
 
@@ -722,11 +756,11 @@ export class DataController {
         }
 
         this._colsTotalWidth = x;
-        // // // // // // //////////////////////////console.log(this.indexToColumnLabel(this.visibleCols[0].index), this.indexToColumnLabel(this.visibleCols[this.visibleCols.length - 1].index));
+        // // // // // // //////////////////////////////console.log(this.indexToColumnLabel(this.visibleCols[0].index), this.indexToColumnLabel(this.visibleCols[this.visibleCols.length - 1].index));
     }
 
     getAdjustedSelectedRange() {
-        ////////////////////console.log(this._selectedCellRange);
+        ////////////////////////console.log(this._selectedCellRange);
 
         let adjustedCellSelection = [{ row: this._selectedCellRange[0].row, col: this._selectedCellRange[0].col }, { row: this._selectedCellRange[1].row, col: this._selectedCellRange[1].col }];
 
@@ -745,16 +779,16 @@ export class DataController {
         if (this._rowSelected) {
             //this._selectedCellRange[0].col = 0;
             adjustedCellSelection[1].col = this._cols.length - 1;
-            // // // // //////////////////////////console.log("Row selected, adjusting range:",this._selectedCellRange);
+            // // // // //////////////////////////////console.log("Row selected, adjusting range:",this._selectedCellRange);
         }
 
         if (this._colSelected) {
             //this._selectedCellRange[0].row = 0;
             adjustedCellSelection[1].row = this._rows.length - 1;
-            // // // // //////////////////////////console.log("Col selected, adjusting range:",this._selectedCellRange);
+            // // // // //////////////////////////////console.log("Col selected, adjusting range:",this._selectedCellRange);
         }
-        ////////////////////console.log(adjustedCellSelection);
-        // // //////////////////////////console.log("Final Adjusted Cell Selection:", adjustedCellSelection[0].row, adjustedCellSelection[0].col, adjustedCellSelection[1].row, adjustedCellSelection[1].col);
+        ////////////////////////console.log(adjustedCellSelection);
+        // // //////////////////////////////console.log("Final Adjusted Cell Selection:", adjustedCellSelection[0].row, adjustedCellSelection[0].col, adjustedCellSelection[1].row, adjustedCellSelection[1].col);
 
         return adjustedCellSelection;
     }
@@ -771,7 +805,7 @@ export class DataController {
         const colIdx = this.getCol(x);
         const rowIdx = this.getRow(y);
 
-        ////////////////////////console.log("Cell found at:", rowIdx, colIdx);
+        ////////////////////////////console.log("Cell found at:", rowIdx, colIdx);
 
         return { row: rowIdx, col: colIdx };
     }

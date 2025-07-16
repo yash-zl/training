@@ -72,12 +72,26 @@
       background-size: contain;
       z-index: 9999;
     }
+
+    #bottomBar{
+      align-self: flex-end;
+      display: flex;
+      gap: 20px;
+      justify-content: end;
+      position: absolute;
+      bottom: 0;
+      height: 30px;
+      width: 1000px;
+      background-color: white;
+      z-index: 1000;
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- <div id="customCursor"></div> -->
+
   <div id="outerContainer" style="overflow: auto; width: 100vw; height: 100vh;">
     <div id="canvasWrapper" style="position: relative">
       <canvas id="gridCanvas">...</canvas>
@@ -85,13 +99,32 @@
       <canvas id="colHeaderCanvas">...</canvas>
     </div>
   </div>
+  <div id="bottomBar">
+    <div id="count"></div>
+    <div id="min"></div>
+    <div id="max"></div>
+    <div id="sum"></div>
+    <div id="avg"></div>
+  </div>
   <script type="module">
-    import { Excel } from './Excel.js';
+    import { ExcelManager } from './ExcelManager.js';
+    //console.log(document);
+    let excelManager = new ExcelManager(document);
 
-    let excel = new Excel(document);
-  </script>
-    
+    document.addEventListener('pointerdown', (e) => {
+      //console.log(e);
+      if (e.clientY < 30 && e.clientX < 60) {
+        excelManager.add();
+      }
+    })
 
+    document.addEventListener('keydown', (e)=>{
+      let sheetNum = parseInt(e.key.toLowerCase());
+      if(e.ctrlKey && sheetNum){
+        //console.log(sheetNum);
+        excelManager.activate(sheetNum);
+      }
+    })
   </script>
 </body>
 
