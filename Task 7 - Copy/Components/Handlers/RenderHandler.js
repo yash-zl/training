@@ -323,7 +323,7 @@ export class RenderHandler {
         input.style.outline = "none";
 
         this.dataController.getCanvasWrapper().appendChild(input);
-        input.focus();
+        // input.focus();
     }
 
     drawData() {
@@ -417,8 +417,15 @@ export class RenderHandler {
         let bottomBarData = this.dataController.getBottomBarData();
         if (!bottomBarData) return null;
         for (const [key, value] of bottomBarData) {
-            document.getElementById(key).innerText = key+": " + value;
+            value ? document.getElementById(key).innerText = key + ": " + value : () => { };
         }
+        document.getElementById('bottomBar').style.width = "-webkit-fill-available";
+    }
+
+    removeEditCell() {
+        const input = this.dataController.getInput();
+
+        input.blur()
     }
 
     render() {
@@ -431,7 +438,6 @@ export class RenderHandler {
         this.rowHeaderRender();
         this.colHeaderRender();
         this.gridSelection();
-        this.editCellInput();
         this.drawData();
         this.onHeaderHover();
         this.bottomBarRender();

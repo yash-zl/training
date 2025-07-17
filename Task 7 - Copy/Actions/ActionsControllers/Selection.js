@@ -1,6 +1,10 @@
+import { SelectionEvents } from "../../Components/EventHandlers/SelectionEventHandler.js";
+
 export class RowSelection {
     constructor(dataController) {
         this.dataController = dataController;
+        this.events = new SelectionEvents(this.dataController);
+
     }
 
     pointerDown(e) {
@@ -17,6 +21,8 @@ export class RowSelection {
         this.dataController.setActionType('row-select');
         this.dataController.setRowSelected(true);
         this.dataController.setColSelected(false);
+
+        this.events.activate();
         // this.dummy = new Edit(selectedCellRange);
 
     }
@@ -40,12 +46,13 @@ export class RowSelection {
 
         let selectedCellRange = this.dataController.getSelectedCellRange();
         selectedCellRange[1] = { row: this.dataController.getRow(pointerY), col: this.dataController.getCols().length - 1 };
+        this.events.deactivate();
         return this.dummy;
     }
 
     hitTest(e) {
         //////console.log(e.clientY <= this.dataController.getWih() - 30)
-        if (e.clientX >= 0 && e.clientX <= this.dataController.getRhw() && e.clientY >= this.dataController.getChh() && e.clientY <= this.dataController.getWih()) {
+        if (e.clientX >= 0 && e.clientX <= this.dataController.getRhw() && e.clientY >= this.dataController.getChh() && e.clientY <= this.dataController.getWih() - 30) {
             // //////////console.log('rowOver',);
             this.dataController.setOnRow(this.dataController.getRow(e.clientY));
             return true;
@@ -64,6 +71,7 @@ export class RowSelection {
 export class ColSelection {
     constructor(dataController) {
         this.dataController = dataController;
+        this.events = new SelectionEvents(this.dataController);
     }
     pointerDown(e) {
         const pointerX = e.clientX;
@@ -76,6 +84,8 @@ export class ColSelection {
         this.dataController.setActionType('col-select');
         this.dataController.setColSelected(true);
         this.dataController.setRowSelected(false);
+        this.events.activate();
+
 
     }
 
@@ -100,6 +110,7 @@ export class ColSelection {
         let selectedCellRange = this.dataController.getSelectedCellRange();
 
         selectedCellRange[1] = { row: this.dataController.getRows().length - 1, col: this.dataController.getCol(pointerX) };
+        this.events.deactivate();
         this.dataController.setSelectedCellRange(selectedCellRange);
         return this.dummy;
         //////////////console.log(selectedCellRange);
@@ -124,6 +135,7 @@ export class ColSelection {
 export class RangeSelection {
     constructor(dataController) {
         this.dataController = dataController;
+        this.events = new SelectionEvents(this.dataController);
     }
 
     pointerDown(e) {
@@ -142,6 +154,8 @@ export class RangeSelection {
         this.dataController.setActionType('select');
         this.dataController.setRowSelected(false);
         this.dataController.setColSelected(false);
+        this.events.activate();
+
 
 
     }
@@ -174,12 +188,13 @@ export class RangeSelection {
 
         let selectedCellRange = this.dataController.getSelectedCellRange();
         selectedCellRange[1] = { row: this.dataController.getRow(pointerY), col: this.dataController.getCol(pointerX) };
+        this.events.deactivate();
 
         // return this.dummy;
     }
 
     hitTest(e) {
-        if (e.clientX >= this.dataController.getRhw() && e.clientX < this.dataController.getWiw() - 13 && e.clientY < this.dataController.getWih() - 20 && e.clientY >= this.dataController.getChh()) {
+        if (e.clientX >= this.dataController.getRhw() && e.clientX < this.dataController.getWiw() - 13 && e.clientY < this.dataController.getWih() - 30 && e.clientY >= this.dataController.getChh()) {
             this.dataController.setOnRow(-1);
             return true;
         }

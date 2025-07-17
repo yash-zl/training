@@ -8,7 +8,7 @@ import { DataFunctionsDummy } from '../../Actions/ActionsDummy/DataFunctionsDumm
 
 export class DataController {
     constructor(outerContainer, canvasWrapper, gridCanvas, rowCanvas, colCanvas, window, id, bottomBar) {
-        console.log('dc',bottomBar);
+        console.log('dc', bottomBar);
         this.id = id;
         this._outerContainer = outerContainer;
         this._canvasWrapper = canvasWrapper;
@@ -102,7 +102,7 @@ export class DataController {
         this.redoStack = [];
 
         this._input.addEventListener('input', (value) => {
-            //console.log('pre', this.getUndoStack())
+            console.log('pre')
             this._dataHandler.addAt(this._editCell.row, this._editCell.col, value.target.value);
             this.editDummy.setFinalValue(value.target.value);
             let popped = null;
@@ -130,14 +130,18 @@ export class DataController {
         this.autoScrollDirection = 'row';
         this.bottomBar = bottomBar;
         this.bottomBarData = null;
+
+        this.copiedContentCellRange = [{ row: -1, col: -1 }, { row: -1, col: -1 }]
+
+        this.firstClick = false;
         // this.MathFunctions = MathFunctions();
     }
 
-    getBottomBar(){
+    getBottomBar() {
         return this.bottomBar;
     }
 
-    getBottomBarData(){
+    getBottomBarData() {
         return this.bottomBarData;
     }
 
@@ -178,6 +182,18 @@ export class DataController {
         }
 
         ////////console.log(this.getDataHandler().getData());
+    }
+
+    storeCopy() {
+        this.copiedContent = this.getAdjustedSelectedRange();
+    }
+
+    paste() {
+        this.getDataHandler().processPasteCopiedData(this.copiedContent, this.getEditCell());
+    }
+
+    deleteSelectedData() {
+        this.getDataHandler().processDeleteSelectedData(this.getAdjustedSelectedRange());
     }
 
     addColAt(idx) {
@@ -540,6 +556,8 @@ export class DataController {
     }
 
     setEditCell(val) {
+        // this.firstClick = !this.firstClick;
+        this._input.style.zIndex = '-100';
         this._editCell = val;
         // else return null;
         this._input.value = this._dataHandler.getAt(val.row, val.col);
@@ -725,6 +743,14 @@ export class DataController {
 
         // ////////console.log()
 
+    }
+
+    setFirstClick(val){
+        this.firstClick = val;
+    }
+
+    getFirstClick(){
+        return this.firstClick;
     }
 
     calculateVisibleCols() {

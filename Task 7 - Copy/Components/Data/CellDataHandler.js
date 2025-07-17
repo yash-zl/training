@@ -26,6 +26,11 @@ export class CellDataHandler {
         else return this.data.get(rowIdx).get(colIdx) ? this.data.get(rowIdx).get(colIdx).getContent() : '';
     }
 
+    deleteAt(rowIdx, colIdx){
+        if(this.data.get(rowIdx)==null) return null;
+        else if(this.data.get(rowIdx).get(colIdx)) this.data.get(rowIdx).delete(colIdx);
+    }
+
     getRowData(rowIdx) {
         return this.data.get(rowIdx);
     }
@@ -121,6 +126,10 @@ export class CellDataHandler {
         let lastRow = data.get('lastRow');
         ////////console.log(firstCol, lastCol, lastRow);
         let pushAtRow = this.determineFirstFreeRow(lastRow, firstCol, lastCol);
+
+        if(pushAtRow == lastRow + 1){
+
+        }
         ////////console.log('push',pushAtRow);
         for(let j = firstCol; j<= lastCol; j++){
             ////////console.log('col',j,  data.get(j));
@@ -157,5 +166,37 @@ export class CellDataHandler {
 
     addRowData(rowIdx, startCol, endCol, data){
         this.data.set(rowIdx, data);
+    }
+
+    processPasteCopiedData(copiedCellRange, editCell){
+        if(copiedCellRange.row != -1){
+            let startRow = editCell.row;
+            let startCol = editCell.col;
+
+            let firstRow = copiedCellRange[0].row;
+            let firstCol = copiedCellRange[0].col;
+            let lastRow = copiedCellRange[1].row;
+            let lastCol = copiedCellRange[1].col;
+
+            for(let i = 0; i<=lastRow - firstRow; i++){
+                for(let j = 0; j<= lastCol - firstCol; j++){
+                    this.addAt(startRow + i, startCol + j, this.getAt(firstRow + i, firstCol + j));
+                }
+            }
+        }
+    }
+
+    processDeleteSelectedData(selectedCellRange){
+        let firstRow = selectedCellRange[0].row;
+        let lastRow = selectedCellRange[1].row;
+        let firstCol = selectedCellRange[0].col;
+        let lastCol = selectedCellRange[1].col;
+        if(selectedCellRange[0].row != -1){
+            for(let i = firstRow; i<= lastRow; i++){
+                for(let j = firstCol; j<=lastCol; j++){
+                    this.deleteAt(i, j);
+                }
+            }
+        }
     }
 }

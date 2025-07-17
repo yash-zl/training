@@ -48,7 +48,7 @@ export class KeyboardHandler {
                 e.preventDefault();
                 dataController.computeAndPushDataPoints('max');
                 renderHandler.render();
-            } else if (e.ctrlKey && e.key.toLowerCase() == 'c') {
+            } else if (e.ctrlKey && e.key.toLowerCase() == 'o') {
                 e.preventDefault();
                 dataController.computeAndPushDataPoints('count');
                 renderHandler.render();
@@ -56,6 +56,12 @@ export class KeyboardHandler {
                 e.preventDefault();
                 dataController.computeAndPushDataPoints('avg');
                 renderHandler.render();
+            }else if(e.key.toLowerCase().length == 1){
+                // console.log('check');
+                renderHandler.editCellInput();
+                dataController.getInput().focus();
+                // dataController.getInput().value += e.key.toLowerCase();
+
             }
         });
     }

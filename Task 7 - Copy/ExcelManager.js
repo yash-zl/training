@@ -14,32 +14,39 @@ export class ExcelManager {
 
     init() {
         // ////console.log(this.document);
-        this.sheets++;
-        let dataController = new DataController(this.document.getElementById('outerContainer'), this.document.getElementById('canvasWrapper'), this.document.getElementById('gridCanvas'), this.document.getElementById('rowHeaderCanvas'), this.document.getElementById('colHeaderCanvas'), window, this.sheets, this.document.getElementById('bottomBar'));
-        this.excelDataControllers.push(dataController);
-
+        // this.sheets++;
+        // let dataController = new DataController(this.document.getElementById('outerContainer'), this.document.getElementById('canvasWrapper'), this.document.getElementById('gridCanvas'), this.document.getElementById('rowHeaderCanvas'), this.document.getElementById('colHeaderCanvas'), window, this.sheets, this.document.getElementById('bottomBar'));
+        // this.excelDataControllers.push(dataController);
+        this.addSheet();
         this.activate(1);
         // excel.active(true);
     }
 
-    add() {
+
+    addSheet() {
         this.sheets++;
+        console.log(this.sheets);
         let dataController = new DataController(this.document.getElementById('outerContainer'), this.document.getElementById('canvasWrapper'), this.document.getElementById('gridCanvas'), this.document.getElementById('rowHeaderCanvas'), this.document.getElementById('colHeaderCanvas'), window, this.sheets, this.document.getElementById('bottomBar'));
         this.excelDataControllers.push(dataController);
-        let allInputs = this.document.getElementsByClassName('cellEdit');
-        //console.log(allInputs);
-        for (let input of allInputs) {
-            if (parseInt(input.getAttribute('id')) != this.sheets) {
-                input.style.display = "none";
-            } else {
-                input.style.display = "inline-block";
-            }
-        }
-        this.excel.changeDataController(dataController);
-        ////console.log('adding', dataController);
+        this.activate(this.sheets);
+
+        let sheetButton = this.document.createElement('button');
+        sheetButton.setAttribute('id', this.sheets+'');
+        const sheetNum = this.sheets;
+        sheetButton.innerText = this.sheets+"";
+        sheetButton.addEventListener('pointerdown', ()=>{
+            // console.log(this.sheets);
+            // console.log()
+            this.activate(sheetButton.getAttribute('id'));
+        })
+
+        this.document.getElementById('sheets').appendChild(sheetButton);
+
+        return dataController;
     }
 
     activate(val) {
+        val = parseInt(val);
         if (val > this.sheets) return null;
         ////console.log('activating ', this.excelDataControllers[val-1]);
         let allInputs = this.document.getElementsByClassName('cellEdit');

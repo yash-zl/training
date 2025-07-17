@@ -73,19 +73,29 @@
       z-index: 9999;
     }
 
-    #bottomBar{
+    #bottomBar {
       align-self: flex-end;
       display: flex;
       gap: 20px;
-      justify-content: end;
+      justify-content: space-between;
       position: absolute;
       bottom: 0;
       height: 30px;
-      width: 1000px;
+      /* width: 1000px; */
       background-color: white;
       z-index: 1000;
+      padding: 0px 30px;
+      align-items: center;
     }
 
+    #sheetsNav {
+      display: flex;
+    }
+
+    #cumulativeData {
+      display: flex;
+      gap: 20px;
+    }
   </style>
 </head>
 
@@ -100,27 +110,37 @@
     </div>
   </div>
   <div id="bottomBar">
-    <div id="count"></div>
-    <div id="min"></div>
-    <div id="max"></div>
-    <div id="sum"></div>
-    <div id="avg"></div>
+    <div id="sheetsNav">
+      <div id="sheets"></div>
+      <button id="addSheet">
+        +
+      </button>
+    </div>
+
+
+    <div id="cumulativeData">
+      <div id="count"></div>
+      <div id="min"></div>
+      <div id="max"></div>
+      <div id="sum"></div>
+      <div id="avg"></div>
+    </div>
+
   </div>
   <script type="module">
     import { ExcelManager } from './ExcelManager.js';
     //console.log(document);
     let excelManager = new ExcelManager(document);
 
-    document.addEventListener('pointerdown', (e) => {
-      //console.log(e);
-      if (e.clientY < 30 && e.clientX < 60) {
-        excelManager.add();
-      }
+    document.getElementById('addSheet').addEventListener('pointerdown', (e) => {
+
+      excelManager.addSheet();
+
     })
 
-    document.addEventListener('keydown', (e)=>{
+    document.addEventListener('keydown', (e) => {
       let sheetNum = parseInt(e.key.toLowerCase());
-      if(e.ctrlKey && sheetNum){
+      if (e.ctrlKey && sheetNum) {
         //console.log(sheetNum);
         excelManager.activate(sheetNum);
       }
